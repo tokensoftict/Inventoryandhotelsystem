@@ -25,6 +25,8 @@ class UserSeeder extends Seeder
                 'email_verified_at'=>Carbon::now(),
                 'password' => bcrypt('admin'),
                 'status' => '1',
+                "customer_type" => "  ",
+                "customer_id" => "0",
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]
