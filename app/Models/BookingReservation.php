@@ -133,7 +133,7 @@ class BookingReservation extends Model
 
     public function markAsPaid(){
 
-        $total_paid = $this->paymentMethodTable()->sum('amount');
+        $total_paid = $this->paymentMethodTable()->where('invoice_type',"App\Models\BookingReservation")->where("invoice_id",$this->id)->sum('amount');
 
         $this->total_paid = $total_paid;
 

@@ -262,7 +262,7 @@ class BookingsController extends Controller
 
             $payment =  Payment::createPayment(['invoice'=>$data['booking'],'payment_info'=>$request, "type"=>"Reservation"]);
 
-            unset( $data['booking']->sub_total);
+            unset($data['booking']->sub_total);
 
             if(isset($payment->id)) $data['booking']-> markAsPaid();
 
