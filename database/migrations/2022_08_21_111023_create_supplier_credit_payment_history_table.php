@@ -19,7 +19,7 @@ class CreateSupplierCreditPaymentHistoryTable extends Migration
             $table->foreignId("user_id")->nullable()->constrained()->nullOnDelete();
             $table->unsignedBigInteger("supplier_id")->nullable();
             $table->foreignId("purchase_order_id")->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId("payment_method_id")->nullable();
+            $table->foreignId("payment_method_id")->nullable()->constrained()->nullOnDelete();
             $table->string('payment_info')->nullable();
             $table->decimal("amount",20,5);
             $table->date("payment_date");

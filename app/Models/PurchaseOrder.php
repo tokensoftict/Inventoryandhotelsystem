@@ -124,7 +124,7 @@ class PurchaseOrder extends Model
                 'user_id' => \auth()->id(),
                 'supplier_id' =>$this->supplier_id,
                 'purchase_order_id' => $this->id,
-                'payment_method_id' => 1,
+                'payment_method_id' => NULL,
                 'payment_info' => "",
                 'amount' =>- $this->total,
                 'payment_date' =>$this->date_created,
