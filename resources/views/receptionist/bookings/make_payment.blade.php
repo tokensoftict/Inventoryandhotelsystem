@@ -28,7 +28,7 @@
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Total Amount Paid</label>
-                                <input type="text" required name="total_amount_paid" class="form-control" value="{{ $booking->total - $booking->total_paid  }}"/>
+                                <input type="text" required name="total_amount_paid" id="total_amount_paid" class="form-control" value="{{ $booking->total - $booking->total_paid  }}"/>
                             </div>
 
 
@@ -145,7 +145,7 @@
                     if($(this).val() !="") {
                         var val = parseFloat($(this).val());
                         if (val > 0) {
-                            var change = val - {{ $booking->total }} ;
+                            var change = val - parseInt($('#total_amount_paid').val());
                             $("#customer_change").html(formatMoney(change));
                         }
                     }else{
