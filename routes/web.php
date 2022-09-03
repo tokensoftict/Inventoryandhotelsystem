@@ -215,6 +215,11 @@ Route::middleware(['auth'])->group(function () {
                 Route::match(['get','post'],'{id}/stock_report', ['as' => 'stock_report', 'uses' => 'StockController@stock_report', 'custom_label'=>'Stock Report']);
                 Route::match(['post','get'],'quick', ['as' => 'convert', 'uses' => 'StockController@conversion_of','visible' => true,'custom_label'=>'Quick Adjust Stock Quantity']);
                 Route::match(['get','post'], 'quick',['as' => 'quick', 'uses' => 'StockController@quick', 'visible' => true,'custom_label'=>'Quick Adjust Stock Quantity']);
+
+                Route::match(['get','post'], 'export_stock',['as' => 'export_stock', 'uses' => 'StockController@export_stock', 'visible' => true,'custom_label'=>'Export Stock Excel']);
+                Route::match(['get','post'], 'import_current_stock',['as' => 'import_current_stock', 'uses' => 'StockController@import_current_stock', 'visible' => true,'custom_label'=>'Import/Existing Stock']);
+                Route::match(['get','post'], 'import_new_stock',['as' => 'import_new_stock', 'uses' => 'StockController@import_new_stock', 'visible' => true,'custom_label'=>'Import New Stock']);
+                Route::match(['get','post'], 'export_current_stock',['as' => 'export_current_stock', 'uses' => 'StockController@export_current_stock', 'visible' => true,'custom_label'=>'Export Current Stock']);
             });
 
             Route::prefix('stocklog')->as('stocklog.')->group(function () {

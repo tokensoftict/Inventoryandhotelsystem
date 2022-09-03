@@ -15,7 +15,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::where('group_id','>',1)->get();
         $data['title'] = "System Users";
         $data['users'] = $users;
         $data['depts'] = config('app.departments.'.config('app.store'));

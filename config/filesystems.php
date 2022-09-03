@@ -35,6 +35,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'localBackup' => [
+            'driver' => 'local',
+            'root' => "Flash Drive Path" // your folder,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

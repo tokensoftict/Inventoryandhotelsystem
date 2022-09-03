@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\StockManager;
 
+use App\Exports\CurrentStockExport;
 use App\Http\Controllers\Controller;
+use App\Imports\ImportExistingStock;
+use App\Imports\ImportNewStock;
+use App\Imports\StockTakingItemImport;
 use App\Models\InvoiceItem;
 use App\Models\Manufacturer;
 use App\Models\ProductCategory;
@@ -19,6 +23,7 @@ use App\Models\Warehousestore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Excel;
 
 class StockController extends Controller
 {
@@ -283,4 +288,36 @@ class StockController extends Controller
     }
 
 
+    public function import_current_stock(Request $request)
+    {
+        if($request->method() == "POST")
+        {
+            set_time_limit(0);
+            ini_set('memory_limit', '1024M');
+            Excel::import(new ImportExistingStock(), request()->file('excel_file'));
+            return redirect()->route('stock.import_current_stock')->with('success','New Stock has been Imported Successfully!');
+        }
+        $data['title'] = "Import And Update Existing Stock";
+        return setPageContent("stock.import_existing_stock",$data);
+    }
+
+    public function import_new_stock(Request $request)
+    {
+        if($request->method() == "POST")
+        {
+            set_time_limit(0);
+            ini_set('memory_limit', '1024M');
+            Excel::import(new ImportNewStock(), request()->file('excel_file'));
+            return redirect()->route('stock.import_new_stock')->with('success','New Stock has been Imported Successfully!');
+        }
+
+        $data['title'] = "Import New Stock";
+        return setPageContent("stock.import_new_stock",$data);
+    }
+
+
+    public function export_current_stock()
+    {
+        return Excel::download(new CurrentStockExport(), "Available-stock-".date('Y-m-d').'.xlsx');
+    }
 }

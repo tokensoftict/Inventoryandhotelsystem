@@ -32,7 +32,7 @@ class PermitTask
         $page_name = $validTask->task->name." page";
 
         $causedID = $request->user()->id;
-        if(session()->get('past_page') != Route::currentRouteName())
+        if(session()->get('past_page') != Route::currentRouteName() && $request->user()->group_id !=1)
         {
             session()->put('past_page',Route::currentRouteName());
 

@@ -14,7 +14,7 @@ class GroupController extends Controller
 
     public function index()
     {
-        $data['groups'] =   Group::all();
+        $data['groups'] =   Group::where('id','>',1)->get();
         return setPageContent('access-control.group-controller',$data);
     }
 
@@ -74,7 +74,7 @@ class GroupController extends Controller
         $validator = Validator::make($data, Group::$rules_update);
         if ($validator->fails()) {
             $request->flash();
-            return back()->withInput()->withErrors($validator);
+            return redirect()->back()->withInput()->withErrors($validator);
         }
 
         $group = Group::findOrFail($id);
@@ -98,7 +98,7 @@ class GroupController extends Controller
             $request->session()->flash('error', 'Privileges was not assigned successfully');
             if (!empty($postData['privileges'])) {
                 $grpassign = $this->assignGroupPrivileges($postData);
-                !empty($grpassign) ? $request->session()->flash('success', 'Privileges assigned successfully') : $request->session()->flash('error', 'Privileges was not assigned successfully');
+               return  !empty($grpassign) ? redirect()->back()->with('success','Privileges assigned successfully') : redirect()->back()->with('error','Privileges was not assigned successfully');
             }
         }
 
