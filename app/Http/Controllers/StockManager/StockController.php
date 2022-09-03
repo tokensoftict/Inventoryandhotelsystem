@@ -25,7 +25,6 @@ class StockController extends Controller
 
 
     public function index(){
-
         $data['title'] = "Stock List(s)";
         $data['stocks'] = Stock::with(['manufacturer','product_category','user','last_updated'])->where('status',1);
         return setPageContent("stock.list-stock",$data);
