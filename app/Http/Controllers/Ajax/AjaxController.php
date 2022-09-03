@@ -14,11 +14,11 @@ class AjaxController extends Controller
     public function findstock(Request $request){
 
         $result = [];
-        /*
+
         if($request->get('searchTerm') && $request->get('query')){
             return response()->json($result);
         }
-        */
+
         $query = ($request->get('query') ? $request->get('query') : $request->get('searchTerm'));
 
 
@@ -52,11 +52,11 @@ class AjaxController extends Controller
     public function findanystock(Request $request){
 
         $result = [];
-        /*
+
         if($request->get('searchTerm') && $request->get('query')){
             return response()->json($result);
         }
-        */
+
         $query = ($request->get('query') ? $request->get('query') : $request->get('searchTerm'));
 
 
@@ -89,11 +89,11 @@ class AjaxController extends Controller
 
     public function findselectstock(Request $request){
         $result = [];
-        /*
+
         if($request->get('searchTerm') && $request->get('query')){
             return response()->json($result);
         }
-        */
+
         $query = ($request->get('query') ? $request->get('query') : $request->get('searchTerm'));
 
 
@@ -181,18 +181,13 @@ class AjaxController extends Controller
 
         $query =  explode(' ', $query);
 
-        $stocks = Stockbatch::select(
-            'stock_id'
-        )->with(['stock'])->whereHas('stock',function($q) use (&$query){
-            $q->where('status',1);
-            $q->where('type','!=','NON-SALEABLE-ITEMS');
-            $q->where(function($sub) use (&$query){
+        $stocks = Stock::where('status',1)
+            ->where('type','!=','NON-SALEABLE-ITEMS')
+            ->where(function($sub) use(&$query){
                 foreach ($query as $char) {
                     $sub->where('name', 'LIKE', "%{$char}%");
                 }
-            });
-            $q->orWhere('barcode', "=", $query);
-        })->groupBy('stock_id')->get();
+            })->orWhere('barcode', "=", $query)->get();
 
         foreach ($stocks as $stock) {
             $result[] = [
