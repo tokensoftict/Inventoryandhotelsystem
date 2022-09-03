@@ -86,7 +86,7 @@
                             </tbody>
                         </table>
 
-                        {!! $batches->links() !!}
+
                     </div>
                 </section>
             </div>

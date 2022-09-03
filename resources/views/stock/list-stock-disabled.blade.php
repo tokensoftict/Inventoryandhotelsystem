@@ -68,7 +68,7 @@
                             </tbody>
                         </table>
 
-                        {!! $stocks->links() !!}
+
                     </div>
                 </section>
             </div>
