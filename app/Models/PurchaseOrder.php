@@ -126,8 +126,8 @@ class PurchaseOrder extends Model
                 'purchase_order_id' => $this->id,
                 'payment_method_id' => NULL,
                 'payment_info' => "",
-                'amount' =>- $this->total,
-                'payment_date' =>$this->date_created,
+                'amount' => -$this->total,
+                'payment_date' =>date('Y-m-d',strtotime($this->date_created)),
             ]
         );
 
