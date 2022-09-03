@@ -14,7 +14,11 @@ class GroupController extends Controller
 
     public function index()
     {
-        $data['groups'] =   Group::where('id','>',1)->get();
+        if(auth()->user()->group_id == 1){
+            $data['groups'] = Group::all();
+        }else {
+            $data['groups'] = Group::where('id', '>', 1)->get();
+        }
         return setPageContent('access-control.group-controller',$data);
     }
 
