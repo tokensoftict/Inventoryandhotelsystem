@@ -191,12 +191,12 @@ class AjaxController extends Controller
 
         foreach ($stocks as $stock) {
             $result[] = [
-                'available_quantity' => $stock->stock->available_quantity,
-                'available_yard_quantity' => $stock->stock->available_yard_quantity,
-                'text' => $stock->stock->name,
-                "id" => $stock->stock->id,
-                'cost_price' =>$stock->stock->cost_price,
-                'selling_price' =>$stock->stock->selling_price
+                'available_quantity' => $stock->available_quantity,
+                'available_yard_quantity' => $stock->available_yard_quantity,
+                'text' => $stock->name,
+                "id" => $stock->id,
+                'cost_price' =>$stock->cost_price,
+                'selling_price' =>$stock->selling_price
             ];
         }
         return response()->json($result);
