@@ -267,6 +267,13 @@ function status($status){
         return \App\Models\Status::where('name',$status)->first()->id;
 }
 
+function showStatus($status)
+{
+    $st = \App\Models\Status::where('name',$status)->first();
+    if(!$st) return label($status);
+    return label($st->name,$st->label);
+}
+
 function label($text, $type = 'default', $extra = 'sm')
 {
     return '<span class="label label-' . $type . '" label-form>' . $text . '</span>';

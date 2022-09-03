@@ -36,7 +36,7 @@
             <button type="submit" class="btn btn-info btn-block">Sign In</button>
         </form>
         <div class="text-center copyright-txt">
-            <small>Tokensoft ICT - Copyright © {{ date('Y') }}</small>
+            <small>© Inventory System 08130610626 Tokensoft ICT {{ date('Y') }}</small>
         </div>
     </div>
 </div>

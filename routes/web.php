@@ -156,7 +156,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::delete('{id}', ['as' => 'destroy', 'uses' => 'RoomTypeController@destroy']);
                 });
 
-             }
+            }
 
             Route::prefix('warehouse_and_shop')->as('warehouse_and_shop.')->group(function () {
                 Route::get('', ['as' => 'index', 'uses' => 'WarehouseAndShopController@index', 'visible' => true]);
@@ -369,8 +369,23 @@ Route::middleware(['auth'])->group(function () {
         });
 
 
+
+        Route::prefix('stockcounting')->namespace('StockCounting')->group(function () {
+
+            Route::prefix('counting')->as('counting.')->group(function () {
+                Route::get('', ['as' => 'index', 'uses' => 'StockCountingController@index', 'visible' => true, 'custom_label'=>'List Stock Counting']);
+                Route::get('create', ['as' => 'create', 'uses' => 'StockCountingController@create', 'visible' => true, 'custom_label'=>'New Stock Counting']);
+                Route::post('', ['as' => 'store', 'uses' => 'StockCountingController@store']);
+                Route::get('{id}/show', ['as' => 'show', 'uses' => 'StockCountingController@show']);
+                Route::get('{id}/delete', ['as' => 'destroy', 'uses' => 'StockCountingController@destroy']);
+                Route::get('{id}/export_excel', ['as' => 'export_excel', 'uses' => 'StockCountingController@export_excel']);
+                Route::match(['get','post'],'{id}/import_excel', ['as' => 'import_excel', 'uses' => 'StockCountingController@import_excel']);
+            });
+
+        });
+
+
+
     });
-
-
 
 });

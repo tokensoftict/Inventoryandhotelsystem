@@ -127,7 +127,7 @@ return [
     'cipher' => 'AES-256-CBC',
 
 
-    'store'=>env('store','hotel'), //  'inventory   hotel'
+    'store'=>env('store','inventory'), //  'inventory   hotel'
 
     'departments' => [
 

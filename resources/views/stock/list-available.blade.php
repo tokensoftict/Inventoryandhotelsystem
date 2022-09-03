@@ -16,7 +16,7 @@
                 <section class="panel">
                     <header class="panel-heading panel-border">
                         {{ $title }}
-                        @if(userCanView('user.group.create'))
+                        @if(userCanView('stock.create'))
                             <span class="tools pull-right">
                                             <a  href="{{ route('stock.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> New Stock</a>
                             </span>

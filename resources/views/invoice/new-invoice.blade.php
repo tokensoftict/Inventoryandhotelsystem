@@ -242,6 +242,7 @@
                                                         <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
                                                     @endforeach
                                                 </select>
+                                                <a href="#" data-toggle="modal" data-target="#newCustomer" class="text-success" style="display: block;text-align: center">Add New Customer</a>
                                             </div>
                                             @endif
                                         </div>
@@ -296,7 +297,49 @@
             </div>
         </div>
     </div>
+    @if(userCanView('customer.store'))
+        <div class="modal fade" id="newCustomer" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">New Customer</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="error_reg" style="display: none;"></div>
+                    <form id="new_customer_form" action="{{ route('customer.store') }}?ajax=true"  enctype="multipart/form-data" method="post">
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text"  required  class="form-control" name="firstname" placeholder="First Name"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text"  required  class="form-control" name="lastname" placeholder="Last Name"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text"    class="form-control" name="email" placeholder="Email Address"/>
+                        </div>
 
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" required  class="form-control" name="phone_number" placeholder="Phone Number"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea class="form-control" placeholder="Address" name="address"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" id="add_customer" class="btn btn-success btn-sm">Add Customer</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 @endsection
 
 
@@ -832,6 +875,59 @@
                 })
 
             }
+
+
+
+            $("#new_customer_form").on("submit",function(){
+                var form__ = $(this);
+                $('#error_reg').html("").attr('style','display: none');
+                $(this).find(".form-control").attr('disabled','disabled');
+                $(this).attr('style','opacity:0.8;');
+                var form = $(this);
+                var data ={};
+                var _data = new Array();
+                form.find('.form-control').each(function(id,elem){
+                    data[$(elem).attr('name')]= $(elem).val();
+                    _data.push($(elem).attr('name'));
+                });
+                data['_token'] = "{{ csrf_token() }}";
+                $('#add_customer').attr("disabled","disabled");
+                $.post($(this).attr('action'),data,function(response,status){
+                    $('#add_customer').removeAttr("disabled");
+                    form__.find(".form-control").removeAttr('disabled');
+                    form__.removeAttr('style');
+                    if(response.status === true){
+                       var newCustomer = new Option(response.value,response.id,true,true);
+                       $('#customer_id').append(newCustomer).trigger('change');
+                        $('#newCustomer').modal('hide');
+                        form__.find(".form-control").val('');
+                        form__.find(".form-control").html('');
+                    }else{
+                        $err = "<li style='list-style: none;color: #FFF; font-size: 11px'>" + response.message + "</li>";
+                        $('#error_reg').html($err).attr('style','display: block');
+                    }
+                }) .done(function() {
+                }).fail(function(status) {
+                    form__.find(".form-control").removeAttr('disabled');
+                    form__.removeAttr('style');
+
+                    $('#add_customer').removeAttr("disabled");
+                    var form = $("#new_customer_form");
+                    var _data = new Array();
+                    form.find('.form-control').each(function(id,elem){
+                        _data.push($(elem).attr('name'));
+                    });
+                    var errors =  status.responseJSON.errors;
+                    var html = "";
+                    for(var i =0; i < _data.length; i++){
+                        if(errors[_data[i]] !== undefined) {
+                            html += "<li style='list-style: none;color: #FFF; font-size: 11px'>" + errors[_data[i]] + "</li>";
+                        }
+                    }
+                    $('#error_reg').html(html).removeAttr('style');
+                });
+                return false;
+            });
 
 
         });

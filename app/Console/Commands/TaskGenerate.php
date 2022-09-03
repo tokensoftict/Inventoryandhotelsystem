@@ -60,6 +60,7 @@ class TaskGenerate extends Command
             'Receptionist'=>"Bookings & Reservation",
             'PaymentReport'=>"Payment Report",
             'Expenses'=>"Expenses Manager",
+            'StockCounting' => 'Stock Counting'
         ];
 
         $taskList = DB::table('tasks')->pluck('route', 'id');

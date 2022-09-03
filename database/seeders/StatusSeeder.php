@@ -40,6 +40,18 @@ class StatusSeeder extends Seeder
                 'name'=>'Partial Payment',
                 'label'=>'primary'
             ],
+            [
+                'name'=>'Pending',
+                'label'=>'warning'
+            ],
+            [
+                'name'=>'Uploaded',
+                'label'=>'primary'
+            ],
+            [
+                'name'=>'Complete',
+                'label'=>'success'
+            ],
         ]);
     }
 }

@@ -33,9 +33,13 @@ class CustomerController extends Controller
 
         $request->validate(Customer::$validate);
 
-        Customer::create($request->only(Customer::$fields));
+        $customer = Customer::create($request->only(Customer::$fields));
 
-        return redirect()->route('customer.index')->with('success','Customer added successfully');
+        if(!isset($request->ajax))
+        {
+            return redirect()->route('customer.index')->with('success', 'Customer added successfully');
+        }
+        return response()->json(['status'=>true,"id"=>$customer->id,"value"=>$request->get('firstname')." ".$request->get('lastname')]);
     }
 
     public function edit($id){
