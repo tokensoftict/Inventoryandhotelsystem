@@ -183,7 +183,7 @@ class AjaxController extends Controller
             'stock_id'
         )->with(['stock'])->whereHas('stock',function($q) use (&$query){
             $q->where('status',1);
-            $q->where('type','!=','NON-SALEABLE-ITEMS');
+            //$q->where('type','!=','NON-SALEABLE-ITEMS');
             $q->where(function($sub) use (&$query){
                 foreach ($query as $char) {
                     $sub->where('name', 'LIKE', "%{$char}%");
