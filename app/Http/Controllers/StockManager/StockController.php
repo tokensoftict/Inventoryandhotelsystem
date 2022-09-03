@@ -25,8 +25,9 @@ class StockController extends Controller
 
 
     public function index(){
+
         $data['title'] = "Stock List(s)";
-        $data['stocks'] = Stock::with(['manufacturer','product_category','user','last_updated'])->where('status',1);
+        $data['stocks'] = Stock::with(['manufacturer','product_category','user','last_updated'])->where('status',1)->get();
         return setPageContent("stock.list-stock",$data);
     }
 
@@ -165,7 +166,7 @@ class StockController extends Controller
 
     public function disabled(){
         $data['title'] = "Disabled Stock List(s)";
-        $data['stocks'] = Stock::with(['manufacturer','product_category','user','last_updated'])->where('status',0);
+        $data['stocks'] = Stock::with(['manufacturer','product_category','user','last_updated'])->where('status',0)->get();
         return setPageContent("stock.list-stock-disabled",$data);
     }
 
