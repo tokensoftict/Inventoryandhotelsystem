@@ -42,6 +42,13 @@ class User extends Authenticatable
         'remember_token'
     ];
 
+    public static $profile_fields = [
+        'name',
+        'username',
+        'email',
+        'password',
+    ];
+
     public static $rules = [
         'name' => 'required|string',
         'username' => 'required|string',

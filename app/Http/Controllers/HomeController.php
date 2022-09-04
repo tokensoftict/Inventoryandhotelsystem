@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Classes\Settings;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -44,6 +45,35 @@ class HomeController extends Controller
     public function logout(){
         auth()->logout();
         return redirect()->route('home');
+    }
+
+
+    public function myprofile(Request $request)
+    {
+        if(!auth()->check())   return redirect()->route('home');
+
+        $data['title'] = "My Profile";
+
+        $data['user'] = auth()->user();
+
+        if($request->method() == "POST")
+        {
+            $user = $request->only(User::$profile_fields);
+
+            if(!empty($data['password']))
+            {
+                $user['password'] = bcrypt($user);
+            }else
+            {
+                unset($user['password']);
+            }
+
+            $data['user']->update($user);
+
+            return redirect()->route('myprofile')->with('success','Profile has been updated successfully!');
+        }
+
+        return setPageContent('myprofile',$data);
     }
 
 }

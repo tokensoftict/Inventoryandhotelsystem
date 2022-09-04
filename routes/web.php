@@ -19,6 +19,8 @@ Route::get('/login','HomeController@index')->name('login');
 Route::post('/login','HomeController@process_login')->name('process_login');
 Route::get('/logout','HomeController@logout')->name('logout');
 
+Route::match(['post','get'],'/myprofile','HomeController@myprofile')->name('myprofile');
+
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard','Dashboard@index')->name('dashboard');
