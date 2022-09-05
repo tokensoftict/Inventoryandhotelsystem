@@ -23,7 +23,7 @@
                         @endif
                     </header>
                     <div class="panel-body">
-                        <table class="table table-bordered table-responsive table convert-data-table table-striped" style="font-size: 12px">
+                        <table class="table table-bordered table-responsive table-striped" style="font-size: 12px">
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -85,7 +85,7 @@
                             @endforeach
                             </tbody>
                         </table>
-
+                        {!! $stocks->links() !!}
 
                     </div>
                 </section>

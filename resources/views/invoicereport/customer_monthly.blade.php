@@ -31,13 +31,20 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <label>Select Customer</label>
-                                    <select class="form-control" name="status">
+                                    <select class="form-control" name="customer">
                                         @foreach($customers as $cus)
                                             <option {{ $customer == $cus->id ? "selected" : "" }} value="{{ $cus->id }}">{{ $cus->firstname }} {{ $cus->lastname }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-sm-3"><br/>
+                                <div class="col-sm-2">
+                                    <label>Select Status</label>
+                                    <select class="form-control" name="status">
+                                        <option {{ $status == "COMPLETE" ? "selected" : "" }} value="COMPLETE">COMPLETE</option>
+                                        <option {{ $status == "DRAFT" ? "selected" : "" }} value="DRAFT">DRAFT</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1"><br/>
                                     <button type="submit" style="margin-top: 5px;" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>

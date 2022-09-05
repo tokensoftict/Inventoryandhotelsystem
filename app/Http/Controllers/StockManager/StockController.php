@@ -32,7 +32,7 @@ class StockController extends Controller
     public function index(){
 
         $data['title'] = "Stock List(s)";
-        $data['stocks'] = Stock::with(['manufacturer','product_category','user','last_updated'])->where('status',1)->get();
+        $data['stocks'] = Stock::with(['manufacturer','product_category','user','last_updated'])->where('status',1)->paginate(20);
         return setPageContent("stock.list-stock",$data);
     }
 
@@ -153,7 +153,7 @@ class StockController extends Controller
                 $query->where('status',1);
             })
             ->groupBy('stock_id')
-            ->get();
+            ->paginate(20);;
 
 
         $data['batches'] = $available;

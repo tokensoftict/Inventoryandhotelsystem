@@ -50,15 +50,15 @@ class ImportNewStock  implements ToModel,WithHeadingRow
             }
         }
 
-        $stock['selling_price'] = $row['selling_price'];
+        $stock['selling_price'] = empty($row['selling_price']) ? 0 : $row['selling_price'];
 
-        $stock['cost_price'] = $row['cost_price'];
+        $stock['cost_price'] =empty( $row['cost_price']) ? 0 :  $row['cost_price'];
 
-        $stock['yard_selling_price'] = $row['yard_selling_price'];
+        $stock['yard_selling_price'] = (empty($row['yard_selling_price']) ? 0 : $row['yard_selling_price']);
 
-        $stock['yard_cost_price'] = $row['yard_cost_price'];
+        $stock['yard_cost_price'] = (empty($row['yard_cost_price']) ? 0 : $row['yard_cost_price']);
 
-        $stock['type'] = $row['product_type'];
+        $stock['type'] = empty($row['product_type']) ? "NORMAL" : $row['product_type'];
 
         return new Stock($stock);
     }
