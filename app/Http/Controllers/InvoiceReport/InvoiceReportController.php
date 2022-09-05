@@ -58,7 +58,7 @@ class InvoiceReportController extends Controller
         }
         $data['customers'] = Customer::all();
         $data['title'] = "Monthly Customer Invoice Report";
-        $data['invoices'] = Invoice::with(['created_user','customer'])->where('status',$data['status'])->where('warehousestore_id',getActiveStore()->id)->where('customer_id', $data['customer'])->where('status', "COMPLETE")->whereBetween('invoice_date', [$data['from'],$data['to']])->get();
+        $data['invoices'] = Invoice::with(['created_user','customer'])->where('status',$data['status'])->where('warehousestore_id',getActiveStore()->id)->where('customer_id', $data['customer'])->whereBetween('invoice_date', [$data['from'],$data['to']])->get();
         return setPageContent('invoicereport.customer_monthly',$data);
     }
 
