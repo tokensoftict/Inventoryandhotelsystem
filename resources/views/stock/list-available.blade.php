@@ -85,7 +85,7 @@
                             @endforeach
                             </tbody>
                         </table>
-                        {!! $batch->links() !!}
+                        {!! $batches->links() !!}
 
                     </div>
                 </section>
