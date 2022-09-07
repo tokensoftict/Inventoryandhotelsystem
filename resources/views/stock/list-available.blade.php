@@ -85,7 +85,7 @@
                             @endforeach
                             </tbody>
                         </table>
-                        {!! $stocks->links() !!}
+                        {!! $batch->links() !!}
 
                     </div>
                 </section>
