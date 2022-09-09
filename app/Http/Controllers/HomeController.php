@@ -62,7 +62,7 @@ class HomeController extends Controller
 
             if(!empty($data['password']))
             {
-                $user['password'] = bcrypt($user);
+                $user['password'] = bcrypt($user['password']);
             }else
             {
                 unset($user['password']);
