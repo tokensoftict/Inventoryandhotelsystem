@@ -60,7 +60,7 @@ class HomeController extends Controller
         {
             $user = $request->only(User::$profile_fields);
 
-            if(!empty($data['password']))
+            if(!empty($user['password']))
             {
                 $user['password'] = bcrypt($user['password']);
             }else
