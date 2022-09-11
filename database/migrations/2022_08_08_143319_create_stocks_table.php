@@ -21,10 +21,10 @@ class CreateStocksTable extends Migration
             $table->string("code",255)->nullable();
             $table->unsignedBigInteger('product_category_id')->nullable();
             $table->foreignId('manufacturer_id')->nullable()->constrained()->onDelete("set null");
-            $table->decimal("selling_price",20,5)->nullable();
-            $table->decimal('yard_selling_price',20,5)->default(0);
-            $table->decimal("cost_price",20,5)->nullable();
-            $table->decimal('yard_cost_price',20,5)->default(0);
+            $table->decimal("selling_price",20,5)->nullable()->default(0);
+            $table->decimal('yard_selling_price',20,5)->nullable()->default(0);
+            $table->decimal("cost_price",20,5)->nullable()->default(0);
+            $table->decimal('yard_cost_price',20,5)->nullable()->default(0);
             $table->text("barcode")->nullable();
             $table->string("location",255)->nullable();
             $table->string('type')->default("NORMAL"); // NORMAl & PIECES Pieces

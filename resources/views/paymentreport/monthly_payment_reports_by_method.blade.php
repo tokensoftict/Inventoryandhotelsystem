@@ -92,7 +92,7 @@
                                 <th>Total</th>
                                 <th>{{ number_format($total,2) }}</th>
                                 <th></th>
-                                <th></th>
+                                <th></th>  <th></th>
                             </tr>
                             </tfoot>
                         </table>

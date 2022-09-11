@@ -29,6 +29,8 @@ class AddPaymentIdToInvoiceTableRelation extends Migration
     public function down()
     {
         Schema::table('invoices', function (Blueprint $table) {
+            $table->dropForeign('invoices_payment_id_foreign');
+            $table->dropIndex('invoices_payment_id_foreign');
             $table->dropColumn("payment_id");
         });
     }

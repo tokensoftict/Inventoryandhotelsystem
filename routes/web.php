@@ -265,6 +265,7 @@ Route::middleware(['auth'])->group(function () {
 
                 Route::get('draft_invoice', ['as' => 'draft_invoice', 'uses' => 'InvoiceController@draft_invoice','custom_label'=>'Save Invoice to Draft']);
                 Route::get('complete_invoice', ['as' => 'complete_invoice', 'uses' => 'InvoiceController@complete_invoice','custom_label'=>'Save Invoice to Complete']);
+                Route::post('{id}/complete_invoice_no_edit', ['as' => 'complete_invoice_no_edit', 'uses' => 'InvoiceController@complete_invoice_no_edit','custom_label'=>'Complete / Pay Invoice from view invoice page']);
             });
 
             Route::prefix('cashbook')->as('cashbook.')->group(function () {

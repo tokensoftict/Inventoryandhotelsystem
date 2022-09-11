@@ -28,12 +28,12 @@ class CreateInvoicesItemTable extends Migration
             $table->date("invoice_date");
             $table->string("store")->default('quantity');
             $table->time("sales_time");
-            $table->decimal("cost_price",20,5);
-            $table->decimal("selling_price",20,5);
-            $table->decimal("profit",20,5);
-            $table->decimal("total_cost_price",20,5);
-            $table->decimal("total_selling_price",20,5);
-            $table->decimal("total_profit",20,5);
+            $table->decimal("cost_price",20,5)->nullable();
+            $table->decimal("selling_price",20,5)->nullable();
+            $table->decimal("profit",20,5)->nullable();
+            $table->decimal("total_cost_price",20,5)->nullable();
+            $table->decimal("total_selling_price",20,5)->nullable();
+            $table->decimal("total_profit",20,5)->nullable();
             $table->string("discount_type")->nullable(); //['Fixed','Percentage','None']
             $table->decimal("discount_amount",20,5)->nullable();
             $table->timestamps();

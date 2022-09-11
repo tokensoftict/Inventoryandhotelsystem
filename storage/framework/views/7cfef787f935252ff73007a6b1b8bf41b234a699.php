@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <?php echo e(date('Y')); ?> © Inventory System 08130610626 Tokensoft ICT
+                <?php echo e(date('Y')); ?> © Inventory System Tokensoft ICT
             </div>
         </div>
     </div>

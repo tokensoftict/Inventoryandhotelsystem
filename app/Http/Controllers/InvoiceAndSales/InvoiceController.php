@@ -150,10 +150,31 @@ class InvoiceController extends Controller
     public function view($id){
         $data = [];
         $data['title'] = 'View Invoice';
+        $data['payments'] = PaymentMethod::all();
+        $data['banks'] = BankAccount::where('status',1)->get();
         $data['invoice'] = Invoice::with(['created_by','customer','invoice_items'])->find($id);
         return setPageContent('invoice.view',$data);
     }
 
+
+    public function complete_invoice_no_edit($id, Request $request)
+    {
+        $invoice = Invoice::findorfail($id);
+        if($invoice->status == "COMPLETE") return redirect()->route('invoiceandsales.view',$id)->with('success','Invoice has been completed successfully!');
+
+        $payment = Payment::createPayment(['invoice'=>$invoice,'payment_info'=>$request,"type"=>"Invoice"]);
+
+        $invoice->payment_id = $payment->id;
+
+        $invoice->status = "COMPLETE";
+
+        $invoice->total_amount_paid = $payment->total_paid;
+
+        $invoice->update();
+
+
+        return redirect()->route('invoiceandsales.view',$id)->with('success','Invoice has been completed successfully!');
+    }
 
     public function edit($id){
         $data = [];
