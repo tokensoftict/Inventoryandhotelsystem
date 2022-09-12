@@ -125,6 +125,7 @@ class InvoiceController extends Controller
             'custom_font_data' 	   => [],
             'default_font_size'    => '12',
         ]);
+
         return $pdf->stream('document.pdf');
     }
 
