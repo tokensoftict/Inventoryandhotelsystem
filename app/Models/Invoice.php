@@ -217,7 +217,10 @@ class Invoice extends Model
         //now lets update the invoice
 
         $invoice->invoice_paper_number = $invoice_paper_number;
-        $invoice->customer_id = $request->get('customer_id');
+        if(config('app.store') == "inventory")
+        {
+            $invoice->customer_id = $request->get('customer_id');
+        }
         $invoice->status = $request->get('status');
         $invoice->sub_total = $totals['total_invoice_total_selling'];
         $invoice->total_amount_paid = 0;
