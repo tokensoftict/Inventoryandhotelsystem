@@ -33,7 +33,7 @@
                                     <label>Select User</label>
                                     <select class="form-control" name="customer">
                                         @foreach($customers as $cus)
-                                            <option {{ $customer == $cus->id ? "selected" : "" }} value="{{ $cus->id }}">{{ $cus->firstname }} {{ $cus->lastname }}</option>
+                                            <option {{ $customer == $cus->id ? "selected" : "" }} value="{{ $cus->id }}">{{ $cus->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
