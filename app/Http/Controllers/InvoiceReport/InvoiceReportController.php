@@ -158,7 +158,7 @@ class InvoiceReportController extends Controller
         return setPageContent('invoicereport.return_logs',$data);
     }
 
-
+/*
     public function full_invoice_report(Request $request){
         if($request->get('from') && $request->get('to')){
             $data['from'] = $request->get('from');
@@ -174,6 +174,6 @@ class InvoiceReportController extends Controller
         $data['title'] = "Complete Invoice Report";
         return setPageContent('invoicereport.full_invoice_report',$data);
     }
-
+*/
 
 }
