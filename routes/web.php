@@ -369,6 +369,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::match(['post','get'],'', ['as' => 'index', 'uses' => 'InvoiceReportController@daily', 'visible' => true]);
                 Route::match(['post','get'],'/monthly', ['as' => 'monthly', 'uses' => 'InvoiceReportController@monthly', 'visible' => true]);
                 Route::match(['post','get'],'/customer_monthly', ['as' => 'customer_monthly', 'uses' => 'InvoiceReportController@customer_monthly', 'visible' => true]);
+                Route::match(['post','get'],'/user_monthly', ['as' => 'user_monthly', 'uses' => 'InvoiceReportController@user_monthly', 'visible' => true,'User Monthly Invoice Report']);
                 Route::match(['post','get'],'/product_monthly', ['as' => 'product_monthly', 'uses' => 'InvoiceReportController@product_monthly', 'visible' => true]);
                 Route::match(['post','get'],'/sales_analysis', ['as' => 'sales_analysis', 'uses' => 'InvoiceReportController@sales_analysis','custom_label'=>'Sales Analysis' ,'visible' => true]);
                 Route::match(['post','get'],'/return_logs', ['as' => 'return_logs', 'uses' => 'InvoiceReportController@return_logs','custom_label'=>'Sales Return' ,'visible' => true]);

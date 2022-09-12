@@ -28,7 +28,7 @@
                         @elseif(session('error'))
                             {!! alert_error(session('error')) !!}
                         @endif
-                            <table class="table table-bordered table-responsive table-striped" style="font-size: 12px">
+                            <table class="table {{ config('app.store') == "inventory" ? "" : 'convert-data-table' }} table-bordered table-responsive table-striped" style="font-size: 12px">
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -77,8 +77,9 @@
                             @endforeach
                             </tbody>
                         </table>
-                            {!! $stocks->links() !!}
-
+                            @if(config('app.store') == "inventory")
+                                 {!! $stocks->links() !!}
+                            @endif
                     </div>
                 </section>
             </div>

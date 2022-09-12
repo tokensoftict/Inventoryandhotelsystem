@@ -23,7 +23,7 @@
                         @endif
                     </header>
                     <div class="panel-body">
-                        <table class="table table-bordered table-responsive table-striped" style="font-size: 12px">
+                        <table class="table {{ config('app.store') == "inventory" ? "" : 'convert-data-table' }} table-bordered table-responsive table-striped" style="font-size: 12px">
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -85,8 +85,9 @@
                             @endforeach
                             </tbody>
                         </table>
-                        {!! $batches->links() !!}
-
+                        @if(config('app.store') == "inventory")
+                            {!! $batches->links() !!}
+                        @endif
                     </div>
                 </section>
             </div>

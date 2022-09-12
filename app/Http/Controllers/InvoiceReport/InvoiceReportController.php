@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\ReturnLog;
 use App\Models\Stock;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PDF;
@@ -61,6 +62,26 @@ class InvoiceReportController extends Controller
         $data['invoices'] = Invoice::with(['created_user','customer'])->where('status',$data['status'])->where('warehousestore_id',getActiveStore()->id)->where('customer_id', $data['customer'])->whereBetween('invoice_date', [$data['from'],$data['to']])->get();
         return setPageContent('invoicereport.customer_monthly',$data);
     }
+
+
+    public function user_monthly(Request $request){
+        if($request->get('from') && $request->get('to')){
+            $data['from'] = $request->get('from');
+            $data['to'] = $request->get('to');
+            $data['customer'] = $request->get('customer');
+            $data['status'] = $request->get('status');
+        }else{
+            $data['from'] = date('Y-m-01');
+            $data['to'] = date('Y-m-t');
+            $data['customer'] = 1;
+            $data['status'] = 'DRAFT';
+        }
+        $data['customers'] = User::all();
+        $data['title'] = "Monthly User Invoice Report";
+        $data['invoices'] = Invoice::with(['created_user','customer'])->where('status',$data['status'])->where('warehousestore_id',getActiveStore()->id)->where('created_by', $data['customer'])->whereBetween('invoice_date', [$data['from'],$data['to']])->get();
+        return setPageContent('invoicereport.customer_monthly',$data);
+    }
+
 
     public function product_monthly(Request $request){
         if($request->get('from') && $request->get('to')){

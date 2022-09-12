@@ -58,7 +58,7 @@
                                                     <li><a href="{{ route('stock.toggle',$stock->id) }}">{{ $stock->status == 0 ? 'Enabled' : 'Disabled' }}</a></li>
                                                 @endif
                                                     @if(userCanView('stock.stock_report'))
-                                                        <li><a href="{{ route('stock.stock_report',$batch->stock->id) }}">Product Report</a></li>
+                                                        <li><a href="{{ route('stock.stock_report',$stock->stock->id) }}">Product Report</a></li>
                                                     @endif
                                             </ul>
                                         </div>
