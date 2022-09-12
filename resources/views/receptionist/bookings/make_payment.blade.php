@@ -52,8 +52,12 @@
                                 <select class="form-control" name="payment_method_id" id="payment_method">
                                     <option value="">Select Payment Method</option>
                                     @foreach($payments as $payment)
+                                        @if(strtolower( $payment->name) == "credit")
+                                            @continue
+                                         @endif
                                         <option  data-label="{{ strtolower( $payment->name) }}"  value="{{  $payment->id }}">{{  $payment->name }}</option>
                                     @endforeach
+                                    <option  data-label="split_method"  value="split_method">MULTIPLE PAYMENT METHOD</option>
                                 </select>
                             </div>
                             <div id="more_info_appender">
