@@ -125,7 +125,7 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th>Total</th>
+                                <th>{{ number_format($invoices->sum('sub_total'),2) }}</th>
                                 <th>{{ number_format($total,2) }}</th>
                                 <th></th>
                                 <th></th>
