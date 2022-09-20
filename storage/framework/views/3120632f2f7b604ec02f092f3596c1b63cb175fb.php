@@ -12,12 +12,12 @@
         <div class="row">
             <div class="col-md-12">
                 <section class="panel">
-                    <header class="panel-heading panel-border">
+                    <header class="panel-heading">
                         <?php echo e($title); ?>
 
-                        <?php if(userCanView('stock.create')): ?>
+                        <?php if(userCanView('room.create')): ?>
                             <span class="tools pull-right">
-                                            <a  href="<?php echo e(route('stock.create')); ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New Stock</a>
+                                <a  href="<?php echo e(route('room.create')); ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New Room</a>
                             </span>
                         <?php endif; ?>
                     </header>
@@ -29,64 +29,55 @@
                             <?php echo alert_error(session('error')); ?>
 
                         <?php endif; ?>
-                            <table class="table table-bordered table-responsive table-striped" style="font-size: 12px">
+                        <table class="table table-bordered table-responsive table convert-data-table table-striped" style="font-size: 12px">
                             <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Product Type</th>
-                                <th>Category</th>
-                                <th>Manufacturer</th>
-                                <th>Selling Price</th>
-                                <th>Cost Price</th>
-                                <th>Yard Selling Price</th>
-                                <th>Yard Cost Price</th>
-                                <th>Last Updated</th>
-                                <th>Action</th>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Capacity</th>
+                                <th scope="col">Price / Night</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php $__currentLoopData = $stocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $stock): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php $__empty_1 = true; $__currentLoopData = $rooms; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $room): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <tr>
-                                    <td><?php echo e($loop->iteration); ?></td>
-                                    <td><?php echo e($stock->name); ?></td>
-                                    <td><?php echo e($stock->type); ?></td>
-                                    <td><?php echo e($stock->product_category ?  $stock->product_category->name : "No Category"); ?></td>
-                                    <td><?php echo e($stock->manufacturer ?  $stock->manufacturer->name : "No Manufacturer"); ?></td>
-                                    <td><?php echo e(number_format($stock->selling_price,2)); ?></td>
-                                    <td><?php echo e(number_format($stock->cost_price,2)); ?></td>
-                                    <td><?php echo e(number_format($stock->yard_selling_price,2)); ?></td>
-                                    <td><?php echo e(number_format($stock->yard_cost_price,2)); ?></td>
-                                    <td><?php echo e($stock->last_updated ? $stock->last_updated->name  : ""); ?></td>
+                                    <td scope="row"><?php echo e($loop->iteration); ?></td>
+                                    <td><?php echo e($room->name); ?></td>
+                                    <td><?php echo e($room->room_type->name); ?></td>
+                                    <td><?php echo e($room->capacity); ?></td>
+                                    <td><?php echo e(number_format($room->price,2)); ?></td>
+                                    <td><?php echo label($room->status->name,$room->status->label); ?></td>
                                     <td>
                                         <div class="btn-group">
                                             <button data-toggle="dropdown" class="btn btn-success dropdown-toggle btn-xs" type="button" aria-expanded="false">Action <span class="caret"></span></button>
                                             <ul role="menu" class="dropdown-menu">
-                                                <?php if(userCanView('stock.edit')): ?>
-                                                    <li><a href="<?php echo e(route('stock.edit',$stock->id)); ?>">Edit</a></li>
+                                                <?php if(userCanView('room.edit')): ?>
+                                                    <li><a href="<?php echo e(route('room.edit',$room->id)); ?>">Edit</a></li>
                                                 <?php endif; ?>
-                                                <?php if(userCanView('stock.toggle')): ?>
-                                                        <li><a href="<?php echo e(route('stock.toggle',$stock->id)); ?>"><?php echo e($stock->status == 0 ? 'Enabled' : 'Disabled'); ?></a></li>
-                                                <?php endif; ?>
-                                                    <?php if(userCanView('stock.stock_report')): ?>
-                                                        <li><a href="<?php echo e(route('stock.stock_report',$stock->id)); ?>">Product Report</a></li>
+                                                    <?php if(userCanView('room.destroy')): ?>
+                                                        <li><a href="<?php echo e(route('room.destroy',$room->id)); ?>">Delete Room</a></li>
                                                     <?php endif; ?>
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        There's no data in this table
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                             </tbody>
                         </table>
-                            <?php echo $stocks->links(); ?>
-
-
                     </div>
                 </section>
             </div>
         </div>
     </div>
-
 <?php $__env->stopSection(); ?>
 
 
@@ -100,4 +91,4 @@
     <script src="<?php echo e(asset('assets/js/init-datatables.js')); ?>"></script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/stock/list-stock.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/receptionist/rooms/list-rooms.blade.php ENDPATH**/ ?>

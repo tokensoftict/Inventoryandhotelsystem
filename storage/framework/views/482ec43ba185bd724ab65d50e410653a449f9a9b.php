@@ -23,21 +23,21 @@
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php $__currentLoopData = $room_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $room_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
                                     <td><?php echo e($loop->iteration); ?></td>
-                                    <td><?php echo e($category->name); ?></td>
-                                    <td><?php echo $category->status == 1 ? label("Active","success") : label("Inactive","danger"); ?></td>
+                                    <td><?php echo e($room_type->name); ?></td>
+                                    <td><?php echo $room_type->status == 1 ? label("Active","success") : label("Inactive","danger"); ?></td>
                                     <td>
-                                        <?php if(userCanView('manufacturer.toggle')): ?>
-                                            <?php if($category->status == 1): ?>
-                                                <a href="<?php echo e(route('manufacturer.toggle',$category->id)); ?>" class="btn btn-danger btn-sm">Disable</a>
+                                        <?php if(userCanView('room_type.toggle')): ?>
+                                            <?php if($room_type->status == 1): ?>
+                                                <a href="<?php echo e(route('room_type.toggle',$room_type->id)); ?>" class="btn btn-danger btn-sm">Disable</a>
                                             <?php else: ?>
-                                                <a href="<?php echo e(route('manufacturer.toggle',$category->id)); ?>" class="btn btn-success btn-sm">Enable</a>
+                                                <a href="<?php echo e(route('room_type.toggle',$room_type->id)); ?>" class="btn btn-success btn-sm">Enable</a>
                                             <?php endif; ?>
-                                    <?php endif; ?>
-                                     <?php if(userCanView('manufacturer.edit')): ?>
-                                                <a href="<?php echo e(route('manufacturer.edit',$category->id)); ?>" class="btn btn-success btn-sm">Edit</a>
+                                        <?php endif; ?>
+                                        <?php if(userCanView('room_type.edit')): ?>
+                                            <a href="<?php echo e(route('room_type.edit',$room_type->id)); ?>" class="btn btn-success btn-sm">Edit</a>
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -46,7 +46,7 @@
                     </div>
                 </section>
             </div>
-            <?php if(userCanView('category.create')): ?>
+            <?php if(userCanView('room_type.create')): ?>
                 <div class="col-md-4">
                     <section class="panel">
                         <header class="panel-heading">
@@ -54,12 +54,12 @@
 
                         </header>
                         <div class="panel-body">
-                            <form id="validate" action="<?php echo e(route('manufacturer.store')); ?>" enctype="multipart/form-data" method="post">
+                            <form id="validate" action="<?php echo e(route('room_type.store')); ?>" enctype="multipart/form-data" method="post">
                                 <?php echo e(csrf_field()); ?>
 
                                 <div class="form-group">
                                     <label>Name</label>
-                                    <input type="text" value="<?php echo e(old('name')); ?>" required  class="form-control" name="name" placeholder="Manufacturer Name"/>
+                                    <input type="text" value="<?php echo e(old('name')); ?>" required  class="form-control" name="name" placeholder="Name"/>
                                     <?php if($errors->has('name')): ?>
                                         <label for="name-error" class="error"
                                                style="display: inline-block;"><?php echo e($errors->first('name')); ?></label>
@@ -79,4 +79,4 @@
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/settings/manufacturer/list-manufacturer.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/settings/room_types/list-types.blade.php ENDPATH**/ ?>

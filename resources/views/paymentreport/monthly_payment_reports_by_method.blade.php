@@ -76,7 +76,7 @@
                                     <td>{{ $payment->invoice->invoice_paper_number }}</td>
                                     <td>{{ number_format($payment->amount,2) }}</td>
                                     <td>{{ number_format($payment->amount,2) }}</td>
-                                    <td>{{ date("h:i a",strtotime($payment->payment_time)) }}</td>
+                                    <td>{{ date("h:i a",strtotime($payment->payment->payment_time)) }}</td>
                                     <td>{{ convert_date($payment->payment_date) }}</td>
                                 </tr>
 
@@ -89,8 +89,8 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th>Total</th>
-                                <th>{{ number_format($total,2) }}</th>
+                                <th>{{ number_format($payments->sum('amount'),2) }}</th>
+                                <th>{{ number_format($payments->sum('amount'),2) }}</th>
                                 <th></th>
                                 <th></th>  <th></th>
                             </tr>

@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Africa/Lagos',
 
     /*
     |--------------------------------------------------------------------------
@@ -127,7 +127,7 @@ return [
     'cipher' => 'AES-256-CBC',
 
 
-    'store'=>env('store','inventory'), //  'inventory   hotel'
+    'store'=>env('store','hotel'), //  'inventory   hotel'
 
     'departments' => [
 

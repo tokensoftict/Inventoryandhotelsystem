@@ -8,7 +8,10 @@
     <link href="<?php echo e(asset('bower_components/datatables-responsive/css/responsive.dataTables.scss')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('bower_components/datatables-scroller/css/scroller.dataTables.scss')); ?>" rel="stylesheet">
 <?php $__env->stopPush(); ?>
+
+
 <?php $__env->startSection('content'); ?>
+
     <div class="ui-container">
         <div class="row">
             <div class="col-md-12">
@@ -21,20 +24,13 @@
                             <?php echo e(csrf_field()); ?>
 
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label>From</label>
                                     <input type="text" class="form-control datepicker js-datepicker" data-min-view="2" data-date-format="yyyy-mm-dd" style="background-color: #FFF; color: #000;"  value="<?php echo e($from); ?>" name="from" placeholder="From"/>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label>To</label>
                                     <input type="text" class="form-control datepicker js-datepicker" data-min-view="2" data-date-format="yyyy-mm-dd" style="background-color: #FFF; color: #000;"  value="<?php echo e($to); ?>" name="to" placeholder="TO"/>
-                                </div>
-                                <div class="col-sm-3">
-                                    <label>Select Status</label>
-                                    <select class="form-control" name="status">
-                                        <option <?php echo e($status == "COMPLETE" ? "selected" : ""); ?> value="COMPLETE">COMPLETE</option>
-                                        <option <?php echo e($status == "DRAFT" ? "selected" : ""); ?> value="DRAFT">DRAFT</option>
-                                    </select>
                                 </div>
                                 <div class="col-sm-3"><br/>
                                     <button type="submit" style="margin-top: 5px;" class="btn btn-primary">Submit</button>
@@ -44,73 +40,41 @@
 
                     </header>
                     <div class="panel-body">
-                        <?php if(session('success')): ?>
-                            <?php echo alert_success(session('success')); ?>
-
-                        <?php elseif(session('error')): ?>
-                            <?php echo alert_error(session('error')); ?>
-
-                        <?php endif; ?>
                         <table class="table table-bordered table-responsive table convert-data-table table-striped" id="invoice-list" style="font-size: 12px">
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Invoice/Receipt No</th>
                                 <th>Customer</th>
-                                <th>Status</th>
+                                <th>Store</th>
+                                <th>Invoice / Receipt Number</th>
                                 <th>Sub Total</th>
                                 <th>Total Paid</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>By</th>
-                                <th>Action</th>
+                                <th>Payment Time</th>
+                                <th>Payment Date</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                                $total = 0;
+                                $total=0;
                             ?>
-                            <?php $__currentLoopData = $invoices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $invoice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php $__empty_1 = true; $__currentLoopData = $payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <?php
-                                    $total += $invoice->total_amount_paid;
+                                    $total+=$payment->total_paid;
                                 ?>
                                 <tr>
                                     <td><?php echo e($loop->iteration); ?></td>
-                                    <td><?php echo e($invoice->invoice_paper_number); ?></td>
-                                    <td><?php echo e($invoice->customer->firstname); ?> <?php echo e($invoice->customer->lastname); ?></td>
-                                    <td><?php echo invoice_status($invoice->status); ?></td>
-                                    <td><?php echo e(number_format($invoice->sub_total,2)); ?></td>
-                                    <td><?php echo e(number_format($invoice->total_amount_paid,2)); ?></td>
-                                    <td><?php echo e(convert_date2($invoice->invoice_date)); ?></td>
-                                    <td><?php echo e($invoice->sales_time); ?></td>
-                                    <td><?php echo e($invoice->created_user->name); ?></td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-success dropdown-toggle btn-xs" type="button" aria-expanded="false">Action <span class="caret"></span></button>
-                                            <ul role="menu" class="dropdown-menu">
-                                                <?php if(userCanView('invoiceandsales.view')): ?>
-                                                    <li><a href="<?php echo e(route('invoiceandsales.view',$invoice->id)); ?>">View Invoice</a></li>
-                                                <?php endif; ?>
-                                                    <?php if(userCanView('invoiceandsales.edit') && $invoice->sub_total > -1 && $invoice->status =="DRAFT"): ?>
-                                                        <li><a href="<?php echo e(route('invoiceandsales.edit',$invoice->id)); ?>">Edit Invoice</a></li>
-                                                    <?php endif; ?>
-                                                    <?php if(userCanView('invoiceandsales.destroy') && $invoice->status =="DRAFT"): ?>
-                                                        <li><a href="<?php echo e(route('invoiceandsales.destroy',$invoice->id)); ?>">Delete Invoice</a></li>
-                                                    <?php endif; ?>
-                                                <?php if(userCanView('invoiceandsales.pos_print')): ?>
-                                                    <li><a href="<?php echo e(route('invoiceandsales.pos_print',$invoice->id)); ?>">Print Invoice Pos</a></li>
-                                                <?php endif; ?>
-                                                <?php if(userCanView('invoiceandsales.print_afour')): ?>
-                                                    <li><a href="<?php echo e(route('invoiceandsales.print_afour',$invoice->id)); ?>">Print Invoice A4</a></li>
-                                                <?php endif; ?>
-                                                <?php if(userCanView('invoiceandsales.print_way_bill')): ?>
-                                                    <li><a href="<?php echo e(route('invoiceandsales.print_way_bill',$invoice->id)); ?>">Print Waybill</a></li>
-                                                <?php endif; ?>
-                                            </ul>
-                                        </div>
-                                    </td>
+                                    <td><?php echo e($payment->customer->firstname); ?> <?php echo e($payment->customer->lastname); ?></td>
+                                    <td><?php echo e($payment->warehousestore->name); ?></td>
+                                    <td><?php echo e($payment->invoice->invoice_paper_number); ?></td>
+                                    <td><?php echo e(number_format($payment->subtotal,2)); ?></td>
+                                    <td><?php echo e(number_format($payment->total_paid,2)); ?></td>
+                                    <td><?php echo e(date("h:i a",strtotime($payment->payment_time))); ?></td>
+                                    <td><?php echo e(convert_date($payment->payment_date)); ?></td>
                                 </tr>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+
+                            <?php endif; ?>
                             </tbody>
                             <tfoot>
                             <tr>
@@ -118,10 +82,8 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th>Total</th>
-                                <th><?php echo e(number_format($total,2)); ?></th>
-                                <th></th>
-                                <th></th>
+                                <th><?php echo e(number_format($payments->sum('subtotal'),2)); ?></th>
+                                <th><?php echo e(number_format($payments->sum('total_paid'),2)); ?></th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -132,7 +94,6 @@
             </div>
         </div>
     </div>
-
 
 <?php $__env->stopSection(); ?>
 
@@ -152,4 +113,4 @@
     <script  src="<?php echo e(asset('assets/js/init-datepicker.js')); ?>"></script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/invoicereport/monthly.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/paymentreport/monthly_payment_reports.blade.php ENDPATH**/ ?>

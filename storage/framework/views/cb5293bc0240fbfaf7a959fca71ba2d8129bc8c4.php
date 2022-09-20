@@ -76,7 +76,7 @@
                                     <td><?php echo e($payment->invoice->invoice_paper_number); ?></td>
                                     <td><?php echo e(number_format($payment->amount,2)); ?></td>
                                     <td><?php echo e(number_format($payment->amount,2)); ?></td>
-                                    <td><?php echo e(date("h:i a",strtotime($payment->payment_time))); ?></td>
+                                    <td><?php echo e(date("h:i a",strtotime($payment->payment->payment_time))); ?></td>
                                     <td><?php echo e(convert_date($payment->payment_date)); ?></td>
                                 </tr>
 
@@ -89,8 +89,8 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th>Total</th>
-                                <th><?php echo e(number_format($total,2)); ?></th>
+                                <th><?php echo e(number_format($payments->sum('subtotal'),2)); ?></th>
+                                <th><?php echo e(number_format($payments->sum('total_paid'),2)); ?></th>
                                 <th></th>
                                 <th></th>  <th></th>
                             </tr>

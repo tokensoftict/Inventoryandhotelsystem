@@ -116,7 +116,8 @@ class BookingsController extends Controller
 
     public function show($id){
         $data['title'] = 'View Booking / Reservation';
-        $data['booking']  =  BookingReservation::with(['booking_reservation_items'])->findorfail($id);
+        $data['booking']  =  BookingReservation::with(['booking_reservation_items','paymentMethodTable'])->findorfail($id);
+        $data['payments'] = $data['booking']->paymentMethodTable;
         return setPageContent('receptionist.bookings.view_booking', $data);
     }
 

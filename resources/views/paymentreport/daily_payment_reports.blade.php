@@ -78,8 +78,8 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th>Total</th>
-                                <th>{{ number_format($total,2) }}</th>
+                                <th>{{ number_format($payments->sum('subtotal'),2) }}</th>
+                                <th>{{ number_format($payments->sum('total_paid'),2) }}</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>

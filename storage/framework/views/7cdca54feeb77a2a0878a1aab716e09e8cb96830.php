@@ -73,7 +73,7 @@
                                             <td><?php echo e($payment->invoice->invoice_paper_number); ?></td>
                                             <td><?php echo e(number_format($payment->amount,2)); ?></td>
                                             <td><?php echo e(number_format($payment->amount,2)); ?></td>
-                                            <td><?php echo e(date("h:i a",strtotime($payment->payment_time))); ?></td>
+                                            <td><?php echo e(date("h:i a",strtotime($payment->payment->payment_time))); ?></td>
                                             <td><?php echo e(convert_date($payment->payment->payment_date)); ?></td>
                                         </tr>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

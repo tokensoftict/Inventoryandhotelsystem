@@ -1,7 +1,6 @@
 <?php $__env->startPush('css'); ?>
     <link rel="stylesheet" href="<?php echo e(asset('bower_components/select2/dist/css/select2.min.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')); ?>">
-
     <link href="<?php echo e(asset('bower_components/datatables/media/css/jquery.dataTables.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('bower_components/datatables-tabletools/css/dataTables.tableTools.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('bower_components/datatables-colvis/css/dataTables.colVis.css')); ?>" rel="stylesheet">
@@ -17,6 +16,11 @@
                     <header class="panel-heading">
                         <?php echo e($title); ?>
 
+                        <?php if(userCanView('bookings_and_reservation.create')): ?>
+                            <span class="tools pull-right">
+                                  <a  href="<?php echo e(route('bookings_and_reservation.create')); ?>" class="btn btn-primary"><i class="fa fa-plus"></i> New Reservation / Booking</a>
+                            </span>
+                        <?php endif; ?>
                     </header>
                     <div class="panel-body">
                         <?php if(session('success')): ?>
@@ -31,50 +35,57 @@
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Invoice/Receipt No</th>
                                 <th>Customer</th>
+                                <th>From</th>
+                                <th>To</th>
                                 <th>Status</th>
-                                <th>Sub Total</th>
+                                <th>Nights</th>
+                                <th>Rooms</th>
+                                <th>Booking Date</th>
+                                <th>Total</th>
                                 <th>Total Paid</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>By</th>
+                                <th>Created By</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php
-                                $total = 0;
+                                $total =0;
                             ?>
-                            <?php $__currentLoopData = $invoices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $invoice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php $__currentLoopData = $bookings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booking): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php
-                                    $total += $invoice->total_amount_paid;
+                                    $total+=$booking->total_paid;
                                 ?>
                                 <tr>
                                     <td><?php echo e($loop->iteration); ?></td>
-                                    <td><?php echo e($invoice->invoice_paper_number); ?></td>
-                                    <td><?php echo e($invoice->customer->firstname); ?> <?php echo e($invoice->customer->lastname); ?></td>
-                                    <td><?php echo invoice_status($invoice->status); ?></td>
-                                    <td><?php echo e(number_format($invoice->sub_total,2)); ?></td>
-                                    <td><?php echo e(number_format($invoice->total_amount_paid,2)); ?></td>
-                                    <td><?php echo e(convert_date2($invoice->invoice_date)); ?></td>
-                                    <td><?php echo e($invoice->sales_time); ?></td>
-                                    <td><?php echo e($invoice->created_user->name); ?></td>
+                                    <td><?php echo e($booking->customer->firstname); ?> <?php echo e($booking->customer->lastname); ?></td>
+                                    <td><?php echo e(str_date($booking->start_date)); ?></td>
+                                    <td><?php echo e(str_date($booking->end_date)); ?></td>
+                                    <td><?php echo label($booking->status->name, $booking->status->label); ?></td>
+                                    <td><?php echo e($booking->no_of_days); ?></td>
+                                    <td><?php echo e($booking->no_of_rooms); ?></td>
+                                    <td><?php echo e(str_date($booking->booking_date)); ?></td>
+                                    <td><?php echo e(number_format($booking->total)); ?></td>
+                                    <td><?php echo e(number_format($booking->total_paid)); ?></td>
+                                    <td><?php echo e($booking->user->name); ?></td>
                                     <td>
                                         <div class="btn-group">
                                             <button data-toggle="dropdown" class="btn btn-success dropdown-toggle btn-xs" type="button" aria-expanded="false">Action <span class="caret"></span></button>
                                             <ul role="menu" class="dropdown-menu">
-                                                <?php if(userCanView('invoiceandsales.view')): ?>
-                                                    <li><a href="<?php echo e(route('invoiceandsales.view',$invoice->id)); ?>">View Invoice</a></li>
+                                                <?php if(userCanView('bookings_and_reservation.show')): ?>
+                                                    <li><a href="<?php echo e(route('bookings_and_reservation.show',$booking->id)); ?>">View Booking</a></li>
                                                 <?php endif; ?>
-                                                <?php if(userCanView('invoiceandsales.pos_print')): ?>
-                                                    <li><a onclick="open_print_window(this); return false" href="<?php echo e(route('invoiceandsales.pos_print',$invoice->id)); ?>">Print Invoice Pos</a></li>
+                                                <?php if(userCanView('bookings_and_reservation.edit') && $booking->status->name!="Checked-out"): ?>
+                                                    <li><a href="<?php echo e(route('bookings_and_reservation.edit',$booking->id)); ?>">Edit Booking</a></li>
                                                 <?php endif; ?>
-                                                <?php if(userCanView('invoiceandsales.print_afour')): ?>
-                                                    <li><a onclick="open_print_window(this); return false" href="<?php echo e(route('invoiceandsales.print_afour',$invoice->id)); ?>">Print Invoice A4</a></li>
+                                                <?php if(userCanView('bookings_and_reservation.destroy') && $booking->status->name!="Checked-out"): ?>
+                                                    <li><a href="<?php echo e(route('bookings_and_reservation.destroy',$booking->id)); ?>" class="confirm_action" data-msg="Are you sure, you want to delete this booking?">Delete Booking</a></li>
                                                 <?php endif; ?>
-                                                <?php if(userCanView('invoiceandsales.print_way_bill')): ?>
-                                                    <li><a onclick="open_print_window(this); return false" href="<?php echo e(route('invoiceandsales.print_way_bill',$invoice->id)); ?>">Print Waybill</a></li>
+                                                <?php if(userCanView('bookings_and_reservation.make_payment') && ($booking->status->name!="Checked-out" && $booking->status->name!="Paid" )): ?>
+                                                    <li><a href="<?php echo e(route('bookings_and_reservation.make_payment',$booking->id)); ?>">Add Payment</a></li>
+                                                <?php endif; ?>
+                                                <?php if(userCanView('bookings_and_reservation.check_out') && $booking->status->name!="Checked-out"): ?>
+                                                    <li><a href="<?php echo e(route('bookings_and_reservation.check_out',$booking->id)); ?>" class="confirm_action" data-msg="Are you sure, you want to checkout this booking?">Checkout Guest</a></li>
                                                 <?php endif; ?>
                                             </ul>
                                         </div>
@@ -88,16 +99,17 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <th>Total</th>
                                 <th><?php echo e(number_format($total,2)); ?></th>
-                                <th></th>
-                                <th></th>
                                 <th></th>
                                 <th></th>
                             </tr>
                             </tfoot>
                         </table>
-
                     </div>
                 </section>
             </div>
@@ -121,4 +133,4 @@
     <script  src="<?php echo e(asset('assets/js/init-datepicker.js')); ?>"></script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/invoice/paid-invoice.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/receptionist/bookings/list-reservation.blade.php ENDPATH**/ ?>

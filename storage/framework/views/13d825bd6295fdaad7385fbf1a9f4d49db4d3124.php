@@ -1,62 +1,63 @@
-@extends('layouts.app')
-
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="ui-container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <section class="panel">
                     <header class="panel-heading">
-                        {{ $title }}
+                        <?php echo e($title); ?>
+
                     </header>
                     <div class="panel-body">
-                        @if(session('success'))
-                            {!! alert_success(session('success')) !!}
-                        @elseif(session('error'))
-                            {!! alert_error(session('error')) !!}
-                        @endif
-                        <form action="{{ route('bookings_and_reservation.make_payment',$booking->id) }}" method="post" enctype="multipart/form-data">
-                            {{ csrf_field() }}
+                        <?php if(session('success')): ?>
+                            <?php echo alert_success(session('success')); ?>
+
+                        <?php elseif(session('error')): ?>
+                            <?php echo alert_error(session('error')); ?>
+
+                        <?php endif; ?>
+                        <form action="<?php echo e(route('bookings_and_reservation.make_payment',$booking->id)); ?>" method="post" enctype="multipart/form-data">
+                            <?php echo e(csrf_field()); ?>
+
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Customer Information</label>
-                                <span class="form-control">{{ $booking->customer->firstname }} {{ $booking->customer->lastname }}</span>
+                                <span class="form-control"><?php echo e($booking->customer->firstname); ?> <?php echo e($booking->customer->lastname); ?></span>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Booking / Reservation Number</label>
-                                <span class="form-control">{{ $booking->reservation_number }}</span>
+                                <span class="form-control"><?php echo e($booking->reservation_number); ?></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Total Amount Paid</label>
-                                <input type="text" required name="total_amount_paid" id="total_amount_paid" class="form-control" value="{{ $booking->total - $booking->total_paid  }}"/>
+                                <input type="text" required name="total_amount_paid" id="total_amount_paid" class="form-control" value="<?php echo e($booking->total - $booking->total_paid); ?>"/>
                             </div>
 
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Booking date</label>
-                                <span class="form-control">{{ str_date($booking->boking_date) }}</span>
+                                <span class="form-control"><?php echo e(str_date($booking->boking_date)); ?></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Start Date</label>
-                                <span class="form-control">{{ str_date($booking->start_date) }}</span>
+                                <span class="form-control"><?php echo e(str_date($booking->start_date)); ?></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">End Date</label>
-                                <span class="form-control">{{ str_date($booking->end_date) }}</span>
+                                <span class="form-control"><?php echo e(str_date($booking->end_date)); ?></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Payment Method</label>
                                 <select class="form-control" name="payment_method_id" id="payment_method">
                                     <option value="">Select Payment Method</option>
-                                    @foreach($payments as $payment)
-                                        @if(strtolower( $payment->name) == "credit")
-                                            @continue
-                                         @endif
-                                        <option  data-label="{{ strtolower( $payment->name) }}"  value="{{  $payment->id }}">{{  $payment->name }}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if(strtolower( $payment->name) == "credit"): ?>
+                                            <?php continue; ?>
+                                         <?php endif; ?>
+                                        <option  data-label="<?php echo e(strtolower( $payment->name)); ?>"  value="<?php echo e($payment->id); ?>"><?php echo e($payment->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     <option  data-label="split_method"  value="split_method">MULTIPLE PAYMENT METHOD</option>
                                 </select>
                             </div>
@@ -73,10 +74,10 @@
     </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
 
 
-@push('js')
+<?php $__env->startPush('js'); ?>
     <script>
 
         function getPaymentInfo(){
@@ -128,16 +129,16 @@
                     selected = selected.toLowerCase();
                     if (selected === "transfer") {
                         $("#payment_btn").removeAttr("disabled");
-                        $("#more_info_appender").html('<div id="transfer"><div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="payment_info[bank]"><option value="">-Select Bank-</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div></div>')
+                        $("#more_info_appender").html('<div id="transfer"><div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="payment_info[bank]"><option value="">-Select Bank-</option> <?php $__currentLoopData = $banks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bank): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($bank->id); ?>"><?php echo e($bank->account_number); ?> - <?php echo e($bank->bank->name); ?></option> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> </select></div></div>')
                     } else if (selected === "cash") {
                         $("#payment_btn").removeAttr("disabled");
                         $("#more_info_appender").html('<div id="cash"> <br/><div class="form-group"> <label>Cash Tendered</label> <input class="form-control" type="number" step="0.00001" id="cash_tendered" name="payment_info[cash_tendered]" required placeholder="Cash Tendered"/></div><div class="form-group well"><center>Customer Change</center><h1 align="center" style="font-size: 55px; margin: 0; padding: 0 font-weight: bold;" id="customer_change">0.00</h1></div></div>')
                         handle_cash();
                     } else if (selected === "pos") {
                         $("#payment_btn").removeAttr("disabled");
-                        $("#more_info_appender").html('<div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="payment_info[bank]"><option value="">-Select POS Bank-</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div>')
+                        $("#more_info_appender").html('<div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="payment_info[bank]"><option value="">-Select POS Bank-</option> <?php $__currentLoopData = $banks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bank): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($bank->id); ?>"><?php echo e($bank->account_number); ?> - <?php echo e($bank->bank->name); ?></option> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> </select></div>')
                     } else if (selected === "split_method") {
-                        $("#more_info_appender").html('<div id="split_method"> <br/><h5>MULTIPLE PAYMENT METHOD</h5><table class="table table-striped"> @foreach($payments as $pmthod) @if($pmthod->id==4) @continue @endif<tr><td style="font-size: 15px;">{{ ucwords($pmthod->name) }}</td><td class="text-right" align="right"><input value="0" step="0.00001" required class="form-control pull-right split_control" style="width: 100px;" type="number" data-key="{{ $pmthod->id }}" name="split_method[{{ $pmthod->id }}]"</td><td>@if($pmthod->id != 4 && $pmthod->id!=1)<select class="form-control" name="payment_info_data[{{ $pmthod->id }}]" id="bank_id_{{ $pmthod->id }}"><option value="">Select Bank</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select>@endif @if($pmthod->id==1) <input type="hidden" value="CASH" name="payment_info_data[{{ $pmthod->id }}]"/> @endif</td></tr> @endforeach<tr><th style="font-size: 15px;" colspan="2">Total</th><th class="text-right" id="total_split" style="font-size: 26px;">0.00</th></tr></table></div>')
+                        $("#more_info_appender").html('<div id="split_method"> <br/><h5>MULTIPLE PAYMENT METHOD</h5><table class="table table-striped"> <?php $__currentLoopData = $payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pmthod): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> <?php if($pmthod->id==4): ?> <?php continue; ?> <?php endif; ?><tr><td style="font-size: 15px;"><?php echo e(ucwords($pmthod->name)); ?></td><td class="text-right" align="right"><input value="0" step="0.00001" required class="form-control pull-right split_control" style="width: 100px;" type="number" data-key="<?php echo e($pmthod->id); ?>" name="split_method[<?php echo e($pmthod->id); ?>]"</td><td><?php if($pmthod->id != 4 && $pmthod->id!=1): ?><select class="form-control" name="payment_info_data[<?php echo e($pmthod->id); ?>]" id="bank_id_<?php echo e($pmthod->id); ?>"><option value="">Select Bank</option> <?php $__currentLoopData = $banks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bank): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($bank->id); ?>"><?php echo e($bank->account_number); ?> - <?php echo e($bank->bank->name); ?></option> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> </select><?php endif; ?> <?php if($pmthod->id==1): ?> <input type="hidden" value="CASH" name="payment_info_data[<?php echo e($pmthod->id); ?>]"/> <?php endif; ?></td></tr> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><tr><th style="font-size: 15px;" colspan="2">Total</th><th class="text-right" id="total_split" style="font-size: 26px;">0.00</th></tr></table></div>')
                         handle_split_method();
                     }else{
                         $("#payment_btn").removeAttr("disabled");
@@ -158,7 +159,7 @@
                             $("#customer_change").html(formatMoney(change));
                         }
                     }else{
-                        $("#customer_change").html("{{ number_format(0,2) }}");
+                        $("#customer_change").html("<?php echo e(number_format(0,2)); ?>");
                     }
                 })
             }
@@ -172,7 +173,7 @@
                         }
                     });
                     $("#total_split").html(formatMoney(total));
-                    if(total == {{ $booking->total }} ){
+                    if(total == <?php echo e($booking->total); ?> ){
                         $("#payment_btn").removeAttr("disabled");
                     }else{
                         $("#payment_btn").removeAttr("disabled");
@@ -184,4 +185,6 @@
 
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/hotel/resources/views/receptionist/bookings/make_payment.blade.php ENDPATH**/ ?>
