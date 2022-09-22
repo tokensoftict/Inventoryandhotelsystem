@@ -53,6 +53,7 @@
                                     <th>Amount</th>
                                     <th>Date</th>
                                     <th>By</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -70,6 +71,13 @@
                                             <td>{{ number_format($history->amount,2) }}</td>
                                             <td>{{ convert_date($history->payment_date) }}</td>
                                             <td>{{ $history->user->name }}</td>
+                                            <td>
+                                                @if(userCanView('customer.delete_payment'))
+                                                    <a href="{{ route('customer.delete_payment',$history->id) }}" class="btn btn-danger btn-sm">Delete</a>
+                                                @else
+                                                    Action
+                                                 @endif
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -79,6 +87,7 @@
                                         <th></th>
                                         <th>Total :</th>
                                         <th>{{ number_format($total,2) }}</th>
+                                        <th></th>
                                         <th></th>
                                         <th></th>
                                     </tr>

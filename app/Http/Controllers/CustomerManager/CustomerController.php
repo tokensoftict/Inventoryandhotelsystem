@@ -98,6 +98,17 @@ class CustomerController extends Controller
     }
 
 
+    public function delete_payment($id)
+    {
+       $log =  CreditPaymentLog::find($id);
+
+       if($log)
+       {
+            $log->delete();
+       }
+        return redirect()->route('customer.payment_report')->with('success','Payment has been deleted successfully!');
+    }
+
 
     public function balance_sheet(Request $request){
         $data['customers'] = Customer::where('id','>',1)->get();
