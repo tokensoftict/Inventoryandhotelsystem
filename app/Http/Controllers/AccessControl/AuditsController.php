@@ -21,7 +21,7 @@ class AuditsController extends Controller
 
         $data['title'] = "User Activity Log";
 
-        $data['activities'] = Activity::whereBetween('created_at',[$data['from'],$data['to']])->orderBy('id','DESC')->get();
+        $data['activities'] = Activity::whereBetween('created_at',[$data['from'],$data['to']])->orderBy('id','DESC')->paginate(100);
 
         return setPageContent('access-control.audit_log', $data);
     }
