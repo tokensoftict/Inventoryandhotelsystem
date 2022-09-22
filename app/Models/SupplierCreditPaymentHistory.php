@@ -12,7 +12,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * Class SupplierCreditPaymentHistory
- * 
+ *
  * @property int $id
  * @property int|null $user_id
  * @property int|null $supplier_id
@@ -23,7 +23,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property Carbon $payment_date
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property PaymentMethodTable|null $payment_method_table
  * @property PurchaseOrder|null $purchase_order
  * @property Supplier|null $supplier
