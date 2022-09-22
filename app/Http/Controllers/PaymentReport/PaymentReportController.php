@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\PaymentReport;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\Expense;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
@@ -39,6 +40,28 @@ class PaymentReportController extends Controller
         $data['payments'] = Payment::with(['warehousestore','customer','user','payment_method_tables','invoice'])->where('warehousestore_id',getActiveStore()->id)->whereBetween('payment_date', [$data['from'],$data['to']])->orderBy('id','DESC')->get();
         return setPageContent('paymentreport.monthly_payment_reports',$data);
     }
+
+
+    public function monthly_payment_reports_by_customer(Request $request)
+    {
+        if($request->get('from') && $request->get('to')){
+            $data['from'] = $request->get('from');
+            $data['to'] = $request->get('to');
+            $data['customer'] = $request->get('customer');
+        }else{
+            $data['from'] = date('Y-m-01');
+            $data['to'] = date('Y-m-t');
+            $data['customer'] = 1;
+        }
+        $data['customers'] = Customer::all();
+        $data['title'] = "Monthly Payment Report By Customer";
+
+        $data['payments'] = Payment::with(['warehousestore','customer','user','payment_method_tables','invoice'])->where('customer_id',$data['customer'])->where('warehousestore_id',getActiveStore()->id)->whereBetween('payment_date', [$data['from'],$data['to']])->orderBy('id','DESC')->get();
+        return setPageContent('paymentreport.monthly_payment_reports_by_customer',$data);
+    }
+
+
+
 
     public function monthly_payment_report_by_method(Request $request)
     {

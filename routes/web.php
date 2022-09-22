@@ -303,6 +303,7 @@ Route::middleware(['auth'])->group(function () {
             Route::match(['get','post'],'payment_analysis', ['as' => 'payment_analysis', 'uses' => 'PaymentReportController@payment_analysis', 'visible' => true,'custom_label'=>'Payment Analysis']);
             Route::match(['get','post'],'income_analysis', ['as' => 'income_analysis', 'uses' => 'PaymentReportController@income_analysis', 'visible' => true,'custom_label'=>'Income Analysis']);
             Route::match(['get','post'],'income_analysis_by_department', ['as' => 'income_analysis_by_department', 'uses' => 'PaymentReportController@income_analysis_by_department', 'visible' => true,'custom_label'=>'Income Analysis By Depart.']);
+            Route::match(['get','post'],'monthly_payment_reports_by_customer', ['as' => 'monthly_payment_reports_by_customer', 'uses' => 'PaymentReportController@monthly_payment_reports_by_customer', 'visible' => true,'custom_label'=>'Monthly Report By Customer']);
 
         });
         if(config('app.store') == "hotel") {
