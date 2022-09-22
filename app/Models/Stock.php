@@ -236,6 +236,41 @@ class Stock extends Model
         return $batch_ids;
     }
 
+
+    public function pingSaleableBatches($from, $quantity){
+        $batch_ids = [];
+        if(!$this->stockBatches()->exists()) return false;
+        $stockbatches = $this->stockBatches()->where($from, ">", "0")->orderBy("expiry_date", "ASC")->get();
+
+        if ($stockbatches->count() == 0) return false;
+
+        foreach($stockbatches as $batch) {
+            if($batch->{$from} - $quantity < 0){
+                $quantity = $quantity - $batch->{$from};
+                $b = $batch->toArray();
+                $b['qty'] = $batch->{$from};
+                $b['from'] = $from;
+                $batch_ids[$batch->id] =$b;
+            }else{
+                $batch->{$from} = $batch->{$from} - $quantity;
+                $b = $batch->toArray();
+                $b['qty'] = $quantity;
+                $b['from'] = $from;
+                $batch_ids[$batch->id] = $b;
+                $quantity = 0;
+            }
+            if($quantity === 0)  return $batch_ids;
+        }
+
+        if($quantity != 0) return false;
+
+        if($quantity == 0) return $batch_ids;
+
+        return false;
+    }
+
+
+
     public function getSaleableBatches($from, $quantity){
         $batch_ids = [];
         if(!$this->stockBatches()->exists()) return false;

@@ -83,11 +83,13 @@ class StockTransfer extends Model
 
         if($this->status == "COMPLETE") return redirect()->route('stocktransfer.transfer_report')->with('success','stock transfer was completed successfully');
 
+        $items = $this->stock_transfer_items()->get();
+
         $from_store = getActualStore($this->type, $this->from);
 
         $to_store = getActualStore($this->type, $this->to);
 
-        $items = $this->stock_transfer_items()->get();
+
         foreach ($items as $item)
         {
             $batches =  $item->stock->getSaleableBatches($from_store,$item->quantity);
@@ -144,27 +146,31 @@ class StockTransfer extends Model
     }
 
     public static function createStockTransfer($request){
+
         $qty = $request->get("qty");
+
         $stocks = $request->get("stock_id");
 
         $transfer_item = [];
 
         $total = 0;
 
-        $selected_stocks = Stock::whereIn('id', $stocks)->get();
-
-        foreach ($selected_stocks as $key =>$selected_stock)
+        foreach ($stocks as $key =>$selected_stocks)
         {
-            $total+=getStockActualCostPrice($selected_stock, $request->type) * $qty[$key];
+
+            $stock = Stock::find($selected_stocks);
+
+            $total+=getStockActualCostPrice($stock, $request->type) * $qty[$key];
+
             $transfer_item[] = new StockTransferItem(
                 [
-                    'stock_id' => $selected_stock->id,
+                    'stock_id' => $stock->id,
                     'user_id' => auth()->id(),
                     'product_type' => $request->type,
                     'from' => $request->from,
                     'to' => $request->to,
-                    'selling_price' => getStockActualSellingPrice($selected_stock, $request->type),
-                    'cost_price' => getStockActualCostPrice($selected_stock, $request->type),
+                    'selling_price' => getStockActualSellingPrice($stock, $request->type),
+                    'cost_price' => getStockActualCostPrice($stock, $request->type),
                     'quantity' => $qty[$key],
                     'transfer_date' => $request->transfer_date,
                 ]

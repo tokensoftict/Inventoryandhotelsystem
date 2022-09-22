@@ -59,27 +59,20 @@ class StockTransferController extends Controller
     public function delete_transfer($id)
     {
 
-        $transfer = StockTransfer::with(['store_to','store_from','user'])->find($id);
+        $transfer = StockTransfer::with(['store_to','store_from','user','stock_transfer_items'])->find($id);
 
         $from_store = getActualStore($transfer->product_type, $transfer->from);
 
         $to_store = getActualStore($transfer->product_type, $transfer->to);
 
-        foreach ($transfer->operation()->where('store',$from_store)->get() as $from_transfers)
+        foreach ($transfer->stock_transfer_items as $from_transfers)
         {
-            $from_transfers->returnStockBack();
             $from_transfers->delete();
-        }
-
-        foreach ($transfer->operation()->where('store',$to_store)->get() as $to_transfers)
-        {
-            $to_transfers->minusStockBack();
-            $to_transfers->delete();
         }
 
         $transfer->delete();
 
-        return redirect()->route('stocktransfer.add_transfer')->with('success','Stock has been deleted successfully!');
+        return redirect()->route('stocktransfer.transfer_report')->with('success','Stock has been deleted successfully!');
     }
 
 
