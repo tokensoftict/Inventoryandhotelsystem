@@ -35,8 +35,8 @@ class InvoiceReportController extends Controller
             $data['to'] = $request->get('to');
             $data['status'] = $request->get('status');
         }else{
-            $data['from'] = date('Y-m-01');
-            $data['to'] = date('Y-m-01');
+            $data['from'] = date('Y-m-d');
+            $data['to'] = date('Y-m-d');
             $data['status'] = "COMPLETE";
         }
         $data['title'] = "Monthly Invoice Report";
