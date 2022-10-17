@@ -57,6 +57,7 @@
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>By</th>
+                                <th>Created</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -78,6 +79,7 @@
                                     <td>{{ convert_date2($invoice->invoice_date) }}</td>
                                     <td>{{ date("h:i a",strtotime($invoice->sales_time)) }}</td>
                                     <td>{{ $invoice->created_user->name }}</td>
+                                    <td>{{ $invoice->invoice->created_at }}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button data-toggle="dropdown" class="btn btn-success dropdown-toggle btn-xs" type="button" aria-expanded="false">Action <span class="caret"></span></button>
