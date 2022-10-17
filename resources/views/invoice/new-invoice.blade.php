@@ -212,9 +212,12 @@
                                 <section class="panel-body">
                                     <div class="row">
                                         <div class="col-sm-6">
+                                            <!--
+                                            data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date"
+                                            -->
                                             <div class="form-group">
                                                 <label for="invoice_date">Invoice / Sales date</label>
-                                                <input value="{{ date('Y-m-d') }}" data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date" placeholder="Invoice / Sales date" type="text">
+                                                <input readonly class="form-control" value="{{ date('Y-m-d') }}"  placeholder="Invoice / Sales date" type="text">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
