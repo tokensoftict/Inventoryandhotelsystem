@@ -75,7 +75,7 @@
                                         <h2>Complete Invoice</h2>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Payment Method</label>
-                                            <select class="form-control" name="payment_method_id" id="payment_method">
+                                            <select class="form-control" name="payment_method_id" required id="payment_method">
                                                 <option value="">Select Payment Method</option>
                                                 @foreach($payments as $payment)
                                                     @if($invoice->customer_id ==1 && strtolower( $payment->name)=="credit")
