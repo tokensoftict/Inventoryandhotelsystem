@@ -217,7 +217,7 @@
                                             -->
                                             <div class="form-group">
                                                 <label for="invoice_date">Invoice / Sales date</label>
-                                                <input readonly class="form-control" value="{{ date('Y-m-d') }}"  placeholder="Invoice / Sales date" type="text">
+                                                <input readonly  id="invoice_date" class="form-control" value="{{ date('Y-m-d') }}"  placeholder="Invoice / Sales date" type="text">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
