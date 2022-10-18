@@ -55,7 +55,7 @@ class InvoiceController extends Controller
     }
 
     public function update(Request $request, $id){
-        $invoice = Invoice::find($id);
+        $invoice = Invoice::findorfail($id);
 
         $reports = Invoice::validateInvoiceUpdateProduct(json_decode($request->get('data'),true),'quantity', $invoice);
 
@@ -131,7 +131,7 @@ class InvoiceController extends Controller
 
     public function print_afour($id){
         $data = [];
-        $invoice = Invoice::with(['created_by','customer','invoice_items'])->find($id);
+        $invoice = Invoice::with(['created_by','customer','invoice_items'])->findorfail($id);
         $data['invoice'] = $invoice;
         $data['store'] =  $this->settings->store();
         $pdf = PDF::loadView("print.pos_afour",$data);
@@ -140,7 +140,7 @@ class InvoiceController extends Controller
 
     public function print_way_bill($id){
         $data = [];
-        $invoice = Invoice::with(['created_by','customer','invoice_items'])->find($id);
+        $invoice = Invoice::with(['created_by','customer','invoice_items'])->findorfail($id);
         $data['invoice'] = $invoice;
         $data['store'] =  $this->settings->store();
         $pdf = PDF::loadView("print.pos_afour_waybill",$data);
