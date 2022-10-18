@@ -106,7 +106,7 @@ class InvoiceController extends Controller
 
     public function print_pos($id){
         $data = [];
-        $invoice = Invoice::with(['created_by','customer','invoice_items'])->find($id);
+        $invoice = Invoice::with(['created_by','customer','invoice_items'])->findorfail($id);
         $data['invoice'] =$invoice;
         $data['store'] =  $this->settings->store();
         $page_size = $invoice->invoice_items()->get()->count() * 15;
@@ -153,7 +153,7 @@ class InvoiceController extends Controller
         $data['title'] = 'View Invoice';
         $data['payments'] = PaymentMethod::all();
         $data['banks'] = BankAccount::where('status',1)->get();
-        $data['invoice'] = Invoice::with(['created_by','customer','invoice_items'])->find($id);
+        $data['invoice'] = Invoice::with(['created_by','customer','invoice_items'])->findorfail($id);
         return setPageContent('invoice.view',$data);
     }
 
@@ -188,7 +188,7 @@ class InvoiceController extends Controller
 
 
     public function destroy($id){
-        $invoice = Invoice::find($id);
+        $invoice = Invoice::findorfail($id);
 
         if($invoice->status == "DRAFT")
             $invoice->delete();
