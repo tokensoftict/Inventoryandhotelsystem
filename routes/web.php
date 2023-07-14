@@ -143,6 +143,18 @@ Route::middleware(['auth'])->group(function () {
                 Route::delete('{id}', ['as' => 'destroy', 'uses' => 'ExpensesTypeController@destroy']);
             });
 
+            Route::prefix('customer_table')->as('customer_table.')->group(function () {
+                Route::get('', ['as' => 'index', 'uses' => 'CustomerTableController@index', 'visible' => true]);
+                Route::get('list', ['as' => 'list', 'uses' => 'CustomerTableController@listAll']);
+                Route::get('create', ['as' => 'create', 'uses' => 'CustomerTableController@create']);
+                Route::post('', ['as' => 'store', 'uses' => 'CustomerTableController@store']);
+                Route::get('{id}', ['as' => 'show', 'uses' => 'CustomerTableController@show']);
+                Route::get('{id}/edit', ['as' => 'edit', 'uses' => 'CustomerTableController@edit']);
+                Route::get('{id}/toggle', ['as' => 'toggle', 'uses' => 'CustomerTableController@toggle']);
+                Route::put('{id}', ['as' => 'update', 'uses' => 'CustomerTableController@update']);
+                Route::delete('{id}', ['as' => 'destroy', 'uses' => 'CustomerTableController@destroy']);
+            });
+
             if (config('app.store') == "hotel")
             {
 
