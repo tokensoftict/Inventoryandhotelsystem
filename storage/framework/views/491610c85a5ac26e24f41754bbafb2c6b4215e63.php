@@ -30,16 +30,10 @@
                                     <td><?php echo e($loop->iteration); ?></td>
                                     <td><?php echo e($customer_table->name); ?></td>
                                     <td>
-                                        <?php if(userCanView('customer_table.toggle')): ?>
-                                            <?php if($customer_table->status == 1): ?>
-                                                <a href="<?php echo e(route('customer_table.toggle',$customer_table->id)); ?>" class="btn btn-danger btn-sm">Disable</a>
-                                            <?php else: ?>
-                                                <a href="<?php echo e(route('customer_table.toggle',$customer_table->id)); ?>" class="btn btn-success btn-sm">Enable</a>
-                                            <?php endif; ?>
-                                        <?php endif; ?>
                                         <?php if(userCanView('customer_table.edit')): ?>
-                                            <a href="<?php echo e(route('customer_table.edit',$customer_table->id)); ?>" class="btn btn-success btn-sm">Edit</a>
-                                    <?php endif; ?>
+                                            <a href="<?php echo e(route('customer_table.edit', $customer_table->id)); ?>"
+                                                class="btn btn-success btn-sm">Edit</a>
+                                        <?php endif; ?>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </table>
@@ -56,20 +50,22 @@
 
                         </header>
                         <div class="panel-body">
-                            <form id="validate" action="<?php echo e(route('customer_table.store')); ?>" enctype="multipart/form-data" method="post">
+                            <form id="validate" action="<?php echo e(route('customer_table.store')); ?>" enctype="multipart/form-data"
+                                method="post">
                                 <?php echo e(csrf_field()); ?>
 
                                 <div class="form-group">
                                     <label>Name</label>
-                                    <input type="text" value="<?php echo e(old('name')); ?>" required  class="form-control" name="name" placeholder="Name"/>
+                                    <input type="text" value="<?php echo e(old('name')); ?>" required class="form-control"
+                                        name="name" placeholder="Name" />
                                     <?php if($errors->has('name')): ?>
                                         <label for="name-error" class="error"
-                                               style="display: inline-block;"><?php echo e($errors->first('name')); ?></label>
+                                            style="display: inline-block;"><?php echo e($errors->first('name')); ?></label>
                                     <?php endif; ?>
                                 </div>
                                 <div class="form-group">
                                     <label>Department</label>
-                                    <select class="form-control" name="department" >
+                                    <select class="form-control" name="department">
                                         <option>SELECT DEPARMTMENT</option>
                                         <option value="kitchen">KITCHEN</option>
                                         <option value="bar">BAR</option>
@@ -79,13 +75,13 @@
                                     </select>
                                     <?php if($errors->has('name')): ?>
                                         <label for="name-error" class="error"
-                                               style="display: inline-block;"><?php echo e($errors->first('name')); ?></label>
+                                            style="display: inline-block;"><?php echo e($errors->first('name')); ?></label>
                                     <?php endif; ?>
                                 </div>
                                 <div class="pull-left">
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                                 </div>
-                                <br/> <br/>
+                                <br /> <br />
                             </form>
                         </div>
                     </section>

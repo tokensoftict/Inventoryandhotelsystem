@@ -1,0 +1,1 @@
+<?php /**PATH C:\xampp\htdocs\TokenSoft\Inventoryandhotelsystem\resources\views/settings/customer_table/edit.blade.php ENDPATH**/ ?>

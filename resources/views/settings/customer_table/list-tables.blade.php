@@ -10,7 +10,7 @@
                         {{ $title }}
                     </header>
                     <div class="panel-body">
-                        @if(session('success'))
+                        @if (session('success'))
                             {!! alert_success(session('success')) !!}
                         @elseif(session('error'))
                             {!! alert_error(session('error')) !!}
@@ -22,21 +22,15 @@
                                 <th>Name</th>
                                 <th>Action</th>
                             </tr>
-                            @foreach($customer_tables as $customer_table)
+                            @foreach ($customer_tables as $customer_table)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $customer_table->name }}</td>
                                     <td>
-                                        @if (userCanView('customer_table.toggle'))
-                                            @if($customer_table->status == 1)
-                                                <a href="{{ route('customer_table.toggle',$customer_table->id) }}" class="btn btn-danger btn-sm">Disable</a>
-                                            @else
-                                                <a href="{{ route('customer_table.toggle',$customer_table->id) }}" class="btn btn-success btn-sm">Enable</a>
-                                            @endif
-                                        @endif
                                         @if (userCanView('customer_table.edit'))
-                                            <a href="{{ route('customer_table.edit',$customer_table->id) }}" class="btn btn-success btn-sm">Edit</a>
-                                    @endif
+                                            <a href="{{ route('customer_table.edit', $customer_table->id) }}"
+                                                class="btn btn-success btn-sm">Edit</a>
+                                        @endif
                                 </tr>
                             @endforeach
                         </table>
@@ -45,26 +39,28 @@
                 </section>
             </div>
 
-            @if(userCanView('customer_table.create'))
+            @if (userCanView('customer_table.create'))
                 <div class="col-md-4">
                     <section class="panel">
                         <header class="panel-heading">
                             {{ $title2 }}
                         </header>
                         <div class="panel-body">
-                            <form id="validate" action="{{ route('customer_table.store') }}" enctype="multipart/form-data" method="post">
+                            <form id="validate" action="{{ route('customer_table.store') }}" enctype="multipart/form-data"
+                                method="post">
                                 {{ csrf_field() }}
                                 <div class="form-group">
                                     <label>Name</label>
-                                    <input type="text" value="{{ old('name') }}" required  class="form-control" name="name" placeholder="Name"/>
+                                    <input type="text" value="{{ old('name') }}" required class="form-control"
+                                        name="name" placeholder="Name" />
                                     @if ($errors->has('name'))
                                         <label for="name-error" class="error"
-                                               style="display: inline-block;">{{ $errors->first('name') }}</label>
+                                            style="display: inline-block;">{{ $errors->first('name') }}</label>
                                     @endif
                                 </div>
                                 <div class="form-group">
                                     <label>Department</label>
-                                    <select class="form-control" name="department" >
+                                    <select class="form-control" name="department">
                                         <option>SELECT DEPARMTMENT</option>
                                         <option value="kitchen">KITCHEN</option>
                                         <option value="bar">BAR</option>
@@ -74,13 +70,13 @@
                                     </select>
                                     @if ($errors->has('name'))
                                         <label for="name-error" class="error"
-                                               style="display: inline-block;">{{ $errors->first('name') }}</label>
+                                            style="display: inline-block;">{{ $errors->first('name') }}</label>
                                     @endif
                                 </div>
                                 <div class="pull-left">
                                     <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                                 </div>
-                                <br/> <br/>
+                                <br /> <br />
                             </form>
                         </div>
                     </section>
