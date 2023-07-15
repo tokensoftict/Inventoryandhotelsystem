@@ -44,7 +44,6 @@ class ExpensesTypeController extends Controller
         return redirect()->route('expenses_type.index')->with('success','Operation successful!');
     }
 
-
     public function edit($id){
         $data['title'] = "Update Expenses Type";
         $data['expenses_type'] = ExpensesType::find($id);

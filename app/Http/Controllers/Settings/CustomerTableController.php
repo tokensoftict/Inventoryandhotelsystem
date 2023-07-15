@@ -12,8 +12,9 @@ class CustomerTableController extends Controller
     {
         $data['title'] = "List Expenses Type";
         $data['title2'] = "Add Expenses Type";
+
         $data['expenses_types'] = CustomerTable::all();
-        return setPageContent('settings.expenses_type.list-types', $data);
+        return setPageContent('settings.customer_table.list-types', $data);
     }
 
 
