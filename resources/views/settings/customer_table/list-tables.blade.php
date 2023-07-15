@@ -20,24 +20,22 @@
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>
-                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
-                            @foreach($expenses_types as $expenses_type)
+                            @foreach($customer_tables as $customer_table)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $expenses_type->name }}</td>
-                                    <td>{!! $expenses_type->status == 1 ? label("Active","success") : label("Inactive","danger") !!}</td>
+                                    <td>{{ $customer_table->name }}</td>
                                     <td>
-                                        @if (userCanView('expenses_type.toggle'))
-                                            @if($expenses_type->status == 1)
-                                                <a href="{{ route('expenses_type.toggle',$expenses_type->id) }}" class="btn btn-danger btn-sm">Disable</a>
+                                        @if (userCanView('customer_table.toggle'))
+                                            @if($customer_table->status == 1)
+                                                <a href="{{ route('customer_table.toggle',$customer_table->id) }}" class="btn btn-danger btn-sm">Disable</a>
                                             @else
-                                                <a href="{{ route('expenses_type.toggle',$expenses_type->id) }}" class="btn btn-success btn-sm">Enable</a>
+                                                <a href="{{ route('customer_table.toggle',$customer_table->id) }}" class="btn btn-success btn-sm">Enable</a>
                                             @endif
                                         @endif
-                                        @if (userCanView('expenses_type.edit'))
-                                            <a href="{{ route('expenses_type.edit',$expenses_type->id) }}" class="btn btn-success btn-sm">Edit</a>
+                                        @if (userCanView('customer_table.edit'))
+                                            <a href="{{ route('customer_table.edit',$customer_table->id) }}" class="btn btn-success btn-sm">Edit</a>
                                     @endif
                                 </tr>
                             @endforeach
@@ -46,18 +44,34 @@
                     </div>
                 </section>
             </div>
-            @if(userCanView('expenses_type.create'))
+
+            @if(userCanView('customer_table.create'))
                 <div class="col-md-4">
                     <section class="panel">
                         <header class="panel-heading">
                             {{ $title2 }}
                         </header>
                         <div class="panel-body">
-                            <form id="validate" action="{{ route('expenses_type.store') }}" enctype="multipart/form-data" method="post">
+                            <form id="validate" action="{{ route('customer_table.store') }}" enctype="multipart/form-data" method="post">
                                 {{ csrf_field() }}
                                 <div class="form-group">
                                     <label>Name</label>
                                     <input type="text" value="{{ old('name') }}" required  class="form-control" name="name" placeholder="Name"/>
+                                    @if ($errors->has('name'))
+                                        <label for="name-error" class="error"
+                                               style="display: inline-block;">{{ $errors->first('name') }}</label>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <select class="form-control" name="department" >
+                                        <option>SELECT DEPARMTMENT</option>
+                                        <option value="kitchen">KITCHEN</option>
+                                        <option value="bar">BAR</option>
+                                        <option value="receptionist">RECEPTIONIST</option>
+                                        <option value="pamii">PAMII</option>
+                                        <option value="morris_cafee">MORRIS CAFEE</option>
+                                    </select>
                                     @if ($errors->has('name'))
                                         <label for="name-error" class="error"
                                                style="display: inline-block;">{{ $errors->first('name') }}</label>

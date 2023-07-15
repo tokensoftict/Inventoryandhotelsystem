@@ -10,11 +10,12 @@ class CustomerTableController extends Controller
 {
     public function index()
     {
-        $data['title'] = "List Expenses Type";
-        $data['title2'] = "Add Expenses Type";
+        $data['title'] = "List Tables";
+        $data['title2'] = "Add Table";
 
-        $data['expenses_types'] = CustomerTable::all();
-        return setPageContent('settings.customer_table.list-types', $data);
+        $data['customer_tables'] = CustomerTable::all();
+
+        return setPageContent('settings.customer_table.list-tables', $data);
     }
 
 
@@ -31,11 +32,12 @@ class CustomerTableController extends Controller
 
         $data = $request->only(CustomerTable::$fields);
 
+        // dd($data);
         // $data['status'] = 1;
-
+        
         CustomerTable::create($data);
 
-        return redirect()->route('expenses_type.index')->with('success', 'Expenses type as been created successful!');
+        return redirect()->route('customer_table.index')->with('success', 'Expenses type as been created successful!');
     }
 
 
@@ -44,15 +46,15 @@ class CustomerTableController extends Controller
 
         $this->toggleState(CustomerTable::find($id));
 
-        return redirect()->route('expenses_type.index')->with('success', 'Operation successful!');
+        return redirect()->route('customer_table.index')->with('success', 'Operation successful!');
     }
 
 
     public function edit($id)
     {
         $data['title'] = "Update Expenses Type";
-        $data['expenses_type'] = CustomerTable::find($id);
-        return setPageContent('settings.expenses_type.edit', $data);
+        $data['customer_table'] = CustomerTable::find($id);
+        return setPageContent('settings.customer_table.edit', $data);
     }
 
     public function update(Request $request, $id)
@@ -64,6 +66,6 @@ class CustomerTableController extends Controller
 
         CustomerTable::find($id)->update($data);
 
-        return redirect()->route('expenses_type.index')->with('success', 'Expenses Type as been updated successful!');
+        return redirect()->route('customer_table.index')->with('success', 'Expenses Type as been updated successful!');
     }
 }
