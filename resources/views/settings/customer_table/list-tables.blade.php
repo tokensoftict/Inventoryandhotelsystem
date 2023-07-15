@@ -20,12 +20,14 @@
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>
+                                <th>Department</th>
                                 <th>Action</th>
                             </tr>
                             @foreach ($customer_tables as $customer_table)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $customer_table->name }}</td>
+                                    <td>{{$customer_table->department}}</td>
                                     <td>
                                         @if (userCanView('customer_table.edit'))
                                             <a href="{{ route('customer_table.edit', $customer_table->id) }}"

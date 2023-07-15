@@ -23,12 +23,14 @@
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>
+                                <th>Department</th>
                                 <th>Action</th>
                             </tr>
                             <?php $__currentLoopData = $customer_tables; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $customer_table): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
                                     <td><?php echo e($loop->iteration); ?></td>
                                     <td><?php echo e($customer_table->name); ?></td>
+                                    <td><?php echo e($customer_table->department); ?></td>
                                     <td>
                                         <?php if(userCanView('customer_table.edit')): ?>
                                             <a href="<?php echo e(route('customer_table.edit', $customer_table->id)); ?>"
