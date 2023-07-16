@@ -293,42 +293,6 @@ Route::middleware(['auth'])->group(function () {
 
         });
 
-        Route::prefix('activetable')->namespace('activetable')->group(function () {
-
-            Route::prefix('activetable')->as('activetable.')->group(function () {
-                Route::get('', ['as' => 'new', 'uses' => 'InvoiceController@new', 'visible' => true]);
-                Route::post('create', ['as' => 'create', 'uses' => 'InvoiceController@create']);
-                Route::get('draft', ['as' => 'draft', 'uses' => 'InvoiceController@draft', 'visible' => true]);
-                Route::get('paid', ['as' => 'paid', 'uses' => 'InvoiceController@paid', 'visible' => true]);
-                Route::get('{id}/pos_print', ['as' => 'pos_print', 'uses' => 'InvoiceController@print_pos' ]);
-                Route::get('{id}/print_afour', ['as' => 'print_afour', 'uses' => 'InvoiceController@print_afour']);
-                Route::get('{id}/print_way_bill', ['as' => 'print_way_bill', 'uses' => 'InvoiceController@print_way_bill']);
-                Route::get('{id}/view', ['as' => 'view', 'uses' => 'InvoiceController@view']);
-                Route::get('{id}/edit', ['as' => 'edit', 'uses' => 'InvoiceController@edit']);
-                Route::get('{id}/destroy', ['as' => 'destroy', 'uses' => 'InvoiceController@destroy']);
-                Route::put('{id}/update', ['as' => 'update', 'uses' => 'InvoiceController@update']);
-                Route::get('/return_invoice', ['as' => 'return_invoice', 'uses' => 'InvoiceController@return_invoice', 'visible' => true, 'custom_label'=>'Return Invoice']);
-                Route::post('/add_return_invoice', ['as' => 'add_return_invoice', 'uses' => 'InvoiceController@add_return_invoice',  'custom_label'=>'Create Return Invoice']);
-
-                Route::get('draft_invoice', ['as' => 'draft_invoice', 'uses' => 'InvoiceController@draft_invoice','custom_label'=>'Save Invoice to Draft']);
-                Route::get('complete_invoice', ['as' => 'complete_invoice', 'uses' => 'InvoiceController@complete_invoice','custom_label'=>'Save Invoice to Complete']);
-                Route::post('{id}/complete_invoice_no_edit', ['as' => 'complete_invoice_no_edit', 'uses' => 'InvoiceController@complete_invoice_no_edit','custom_label'=>'Complete / Pay Invoice from view invoice page']);
-            });
-
-            Route::prefix('cashbook')->as('cashbook.')->group(function () {
-                Route::match(['get','post'],'', ['as' => 'index', 'uses' => 'CashBookController@index', 'visible' => true]);
-                Route::get('list', ['as' => 'list', 'uses' => 'CashBookController@list_all']);
-                Route::get('create', ['as' => 'create', 'uses' => 'CashBookController@create', 'visible' => true,'custom_label'=>'Add Cashbook Entry']);
-                Route::post('/store', ['as' => 'store', 'uses' => 'CashBookController@store']);
-                Route::get('{id}/edit', ['as' => 'edit', 'uses' => 'CashBookController@edit']);
-                Route::put('{id}', ['as' => 'update', 'uses' => 'CashBookController@update']);
-                Route::get('{id}/remove', ['as' => 'destroy', 'uses' => 'CashBookController@destroy']);
-            });
-
-        });
-
-
-
         Route::prefix('expenses')->namespace('Expenses')->group(function () {
             Route::prefix('expenses')->as('expenses.')->group(function () {
                 Route::get('', ['as' => 'index', 'uses' => 'ExpensesController@index', 'visible' => true]);
@@ -344,6 +308,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::match(['get','post'],'/expenses_report_by_department', ['as' => 'expenses_report_by_department', 'uses' => 'ExpensesController@expenses_report_by_department', 'visible' => true, "custom_label"=>"Expenses By Department"]);
             });
         });
+
 
         Route::prefix('payment')->namespace('PaymentReport')->group(function () {
             Route::match(['get','post'],'daily_payment_reports', ['as' => 'daily_payment_reports', 'uses' => 'PaymentReportController@daily_payment_reports', 'visible' => true,'custom_label'=>'Daily Report']);
