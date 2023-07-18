@@ -14,4 +14,8 @@ class TableInvoiceController extends Controller
     public function list() {
         
     }
+
+    public function active() {
+        
+    }
 }
