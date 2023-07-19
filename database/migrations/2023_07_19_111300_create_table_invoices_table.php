@@ -19,6 +19,7 @@ class CreateTableInvoicesTable extends Migration
             $table->string("invoice_number",255)->unique();
             $table->string("invoice_paper_number",255)->unique();
             $table->string('department')->default('STORE');
+            $table->unsignedBigInteger('customertable_id')->nullable();
             $table->foreignId('warehousestore_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
             $table->string("discount_type")->nullable(); //['Fixed','Percentage','None']
@@ -35,11 +36,13 @@ class CreateTableInvoicesTable extends Migration
             $table->unsignedBigInteger("voided_by")->nullable();
             $table->date("invoice_date");
             $table->time("sales_time");
+            
             $table->mediumText("void_reason")->nullable();
             $table->date("date_voided")->nullable();
             $table->time("void_time")->nullable();
             $table->timestamps();
 
+            $table->foreign('customertable_id')->references('id')->on('customer_table')->constrained()->cascadeOnDelete();;
             $table->foreign('last_updated_by')->references('id')->on('users')->nullOnDelete();
             $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();
             $table->foreign('voided_by')->references('id')->on('users')->nullOnDelete();

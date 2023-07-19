@@ -207,17 +207,11 @@
                             </section>
                         </div>
                         <div class="col-sm-4">
-                            @if (userCanView('invoiceandsales.create'))
+                            @if (userCanView('tableinvoice.create'))
                                 <section class="panel">
                                     <section class="panel-body panel-border text-center">
-                                        @if (userCanView('invoiceandsales.draft_invoice'))
-                                            <button type="button" data-status="DRAFT" class="btn btn-success btn-lg"
-                                                onclick="return ProcessInvoice(this);">Save Draft</button>
-                                        @endif
-                                        @if (userCanView('invoiceandsales.complete_invoice'))
-                                            <button type="button" data-status="COMPLETE" class="btn btn-primary btn-lg"
-                                                onclick="return ProcessInvoice(this);">Complete Invoice</button>
-                                        @endif
+                                        <button type="button" data-status="DRAFT" class="btn btn-success btn-lg"
+                                            onclick="return ProcessInvoice(this);">Save Draft</button>
                                     </section>
                                 </section>
                             @endif
@@ -231,8 +225,8 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <!--
-                                                data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date"
-                                                -->
+                                                    data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date"
+                                                    -->
                                             <div class="form-group">
                                                 <label for="invoice_date">Invoice / Sales date</label>
                                                 <input readonly id="invoice_date" class="form-control"
@@ -286,8 +280,8 @@
                                                 @else
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">Table Name</label>
-                                                        <select class="form-control  select-customer" name="customer"
-                                                            id="customer_id">
+                                                        <select class="form-control  select-customer"
+                                                            name="customertable_id" id="customertable_id">
                                                             <option value="">Select Table</option>
 
                                                             @foreach ($tables as $table)
@@ -331,25 +325,6 @@
                                                     placeholder="Invoice / Receipt No" type="text">
                                             </div>
                                         </div>
-                                    </div>
-                                </section>
-                            </section>
-                            <section class="panel">
-                                <header class="panel-heading panel-border">Payment Info.</header>
-                                <section class="panel-body">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Payment Method</label>
-                                        <select class="form-control" name="payment_method" id="payment_method">
-                                            <option value="">Select Payment Method</option>
-                                            @foreach ($payments as $payment)
-                                                <option data-label="{{ strtolower($payment->name) }}"
-                                                    value="{{ $payment->id }}">{{ $payment->name }}</option>
-                                            @endforeach
-                                            <option data-label="split_method" value="split_method">MULTIPLE PAYMENT METHOD
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div id="more_info_appender">
                                     </div>
                                 </section>
                             </section>
@@ -718,7 +693,7 @@
                 $('.submit_btn').removeAttr('disabled');
             }, 30000);
             $.ajax({
-                url: '{{ route('invoiceandsales.create') }}',
+                url: '{{ route('tableinvoice.create') }}',
                 method: 'POST',
                 data: {
                     'data': JSON.stringify(stock),
@@ -751,7 +726,7 @@
                         for (let key in errors) {
                             if (document.getElementById('error_' + key)) {
                                 $(document.getElementById('error_' + key)).html(errors[key]).removeAttr(
-                                'style');
+                                    'style');
                             }
                         }
                     }
@@ -929,7 +904,7 @@
                     if (selected === "transfer") {
                         $("#more_info_appender").html(
                             '<div id="transfer"><div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select Bank-</option> @foreach ($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div></div>'
-                            )
+                        )
                     } else if (selected === "cash") {
                         /*
                         <div class="form-group"> <label>Cash Tendered</label> <input class="form-control" type="number" step="0.00001" id="cash_tendered" name="cash_tendered" required placeholder="Cash Tendered"/></div><div class="form-group well"><center>Customer Change</center><h1 align="center" style="font-size: 55px; margin: 0; padding: 0 font-weight: bold;" id="customer_change">0.00</h1></div>
@@ -939,11 +914,11 @@
                     } else if (selected === "pos") {
                         $("#more_info_appender").html(
                             '<div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select POS Bank-</option> @foreach ($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div>'
-                            )
+                        )
                     } else if (selected === "split_method") {
                         $("#more_info_appender").html(
                             '<div id="split_method"> <br/><h5>MULTIPLE PAYMENT METHOD</h5><table class="table table-striped"> @foreach ($payments as $pmthod) @if ($pmthod->id == 4 && config('app.store') == 'inventory') @continue @endif<tr><td style="font-size: 15px;">{{ ucwords($pmthod->name) }}</td><td class="text-right" align="right"><input value="0" step="0.00001" required class="form-control pull-right split_control" style="width: 100px;" type="number" data-key="{{ $pmthod->id }}" name="split_method[{{ $pmthod->id }}]"</td><td>@if ($pmthod->id != 4 && $pmthod->id != 1)<select class="form-control" id="bank_id_{{ $pmthod->id }}"><option value="">Select Bank</option> @foreach ($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select>@endif</td></tr> @endforeach<tr><th style="font-size: 15px;" colspan="2">Total</th><th class="text-right" id="total_split" style="font-size: 26px;">0.00</th></tr></table></div>'
-                            )
+                        )
                         handle_split_method();
                     } else {
                         $("#more_info_appender").html('')

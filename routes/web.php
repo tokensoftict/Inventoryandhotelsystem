@@ -287,13 +287,14 @@ Route::middleware(['auth'])->group(function () {
 
 
         Route::prefix('tableinvoice')->namespace('TableInvoice')->group(function () {
-
             Route::prefix('tableinvoice')->as('tableinvoice.')->group(function () {
                 Route::get('', ['as' => 'new', 'uses' => 'TableInvoiceController@new', 'visible' => true]);
-                Route::get('list', ['as' => 'list', 'uses' => 'TableInvoiceController@list', 'visible' => true]);
-                Route::get('active', ['as' => 'active', 'uses' => 'TableInvoiceController@active', 'visible' => true]);
+                Route::post('create', ['as' => 'create', 'uses' => 'TableInvoiceController@create']);
+                Route::get('draft', ['as' => 'draft', 'uses' => 'TableInvoiceController@draft', 'visible' => true]);            
             });
         });
+
+        
 
         Route::prefix('expenses')->namespace('Expenses')->group(function () {
             Route::prefix('expenses')->as('expenses.')->group(function () {
