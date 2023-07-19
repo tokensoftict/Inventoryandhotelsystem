@@ -42,7 +42,7 @@ class CreateTableInvoicesTable extends Migration
             $table->time("void_time")->nullable();
             $table->timestamps();
 
-            $table->foreign('customertable_id')->references('id')->on('customer_table')->constrained()->cascadeOnDelete();;
+            $table->foreign('customertable_id')->references('id')->on('customer_table')->constrained()->cascadeOnDelete();
             $table->foreign('last_updated_by')->references('id')->on('users')->nullOnDelete();
             $table->foreign('created_by')->references('id')->on('users')->nullOnDelete();
             $table->foreign('voided_by')->references('id')->on('users')->nullOnDelete();
