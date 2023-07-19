@@ -9,6 +9,7 @@ use App\Models\CustomerTable;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
 use App\Models\TableInvoice;
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 
 class TableInvoiceController extends Controller
@@ -28,7 +29,7 @@ class TableInvoiceController extends Controller
     {
         $data = [];
         $data['title'] = 'Draft Invoice List';
-        $data['tableinvoice'] = TableInvoice::with(['created_user', 'customer'])->where('warehousestore_id', getActiveStore()->id)->where('status', 'DRAFT')->where('invoice_date', date('Y-m-d'))->get();
+        $data['tableinvoices'] = TableInvoice::with(['created_user', 'customer'])->where('warehousestore_id', getActiveStore()->id)->where('status', 'DRAFT')->where('invoice_date', date('Y-m-d'))->get();
         return setPageContent('tableinvoice.draft-invoice', $data);
     }
 
@@ -37,27 +38,15 @@ class TableInvoiceController extends Controller
 
         $reports = TableInvoice::validateInvoiceProduct(json_decode($request->get('data'), true), 'quantity');    // validate products if the quantity is okay
 
+
         if ($reports['status'] == true) return response()->json(['status' => false, 'error' => $reports['errors']]);
 
         $invoice = TableInvoice::createInvoice($request, $reports, false);
 
-        if ($request->get('payment') !== "false" && $request->get('status') == 'COMPLETE') {
-
-            $payment = Payment::createPayment(['invoice' => $invoice, 'payment_info' => json_decode($request->get('payment'), true), "type" => "Invoice"]);
-
-            $invoice->payment_id = $payment->id;
-
-            $invoice->total_amount_paid = $payment->total_paid;
-
-            $invoice->update();
-        }
 
         $success_view = view('invoice.success', ['invoice_id' => $invoice->id])->render();
 
         return json(['status' => true, 'html' => $success_view]);
     }
-
-
-
 
 }

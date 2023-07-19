@@ -45,38 +45,38 @@
                                 @php
                                     $total = 0;
                                 @endphp
-                                @foreach($invoices as $invoice)
+                                @foreach($tableinvoices as $tableinvoice)
                                     @php
-                                        $total += $invoice->total_amount_paid;
+                                        $total += $tableinvoice->total_amount_paid;
                                     @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $invoice->invoice_paper_number }}</td>
-                                        <td>{{ $invoice->customer->firstname }} {{ $invoice->customer->lastname }}</td>
-                                        <td>{!! invoice_status($invoice->status) !!}</td>
-                                        <td>{{ number_format($invoice->sub_total,2) }}</td>
-                                        <td>{{ number_format($invoice->total_amount_paid,2) }}</td>
-                                        <td>{{ convert_date2($invoice->invoice_date) }}</td>
-                                        <td>{{ $invoice->sales_time }}</td>
-                                        <td>{{ $invoice->created_user->name }}</td>
+                                        <td>{{ $tableinvoice->invoice_paper_number }}</td>
+                                        <td>{{ $tableinvoice->customer->firstname }} {{ $tableinvoice->customer->lastname }}</td>
+                                        <td>{!! invoice_status($tableinvoice->status) !!}</td>
+                                        <td>{{ number_format($tableinvoice->sub_total,2) }}</td>
+                                        <td>{{ number_format($tableinvoice->total_amount_paid,2) }}</td>
+                                        <td>{{ convert_date2($tableinvoice->invoice_date) }}</td>
+                                        <td>{{ $tableinvoice->sales_time }}</td>
+                                        <td>{{ $tableinvoice->created_user->name }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <button data-toggle="dropdown" class="btn btn-success dropdown-toggle btn-xs" type="button" aria-expanded="false">Action <span class="caret"></span></button>
                                                 <ul role="menu" class="dropdown-menu">
                                                     @if(userCanView('invoiceandsales.view'))
-                                                        <li><a href="{{ route('invoiceandsales.view',$invoice->id) }}">View Invoice</a></li>
+                                                        <li><a href="{{ route('invoiceandsales.view',$tableinvoice->id) }}">View Invoice</a></li>
                                                     @endif
-                                                        @if(userCanView('invoiceandsales.edit') && $invoice->sub_total > -1 && $invoice->status =="DRAFT")
-                                                            <li><a href="{{ route('invoiceandsales.edit',$invoice->id) }}">Edit Invoice</a></li>
+                                                        @if(userCanView('invoiceandsales.edit') && $tableinvoice->sub_total > -1 && $tableinvoice->status =="DRAFT")
+                                                            <li><a href="{{ route('invoiceandsales.edit',$tableinvoice->id) }}">Edit Invoice</a></li>
                                                         @endif
                                                     @if(userCanView('invoiceandsales.pos_print'))
-                                                        <li><a onclick="open_print_window(this); return false" href="{{ route('invoiceandsales.pos_print',$invoice->id) }}">Print Invoice Pos</a></li>
+                                                        <li><a onclick="open_print_window(this); return false" href="{{ route('invoiceandsales.pos_print',$tableinvoice->id) }}">Print Invoice Pos</a></li>
                                                     @endif
                                                     @if(userCanView('invoiceandsales.print_afour'))
-                                                        <li><a onclick="open_print_window(this); return false" href="{{ route('invoiceandsales.print_afour',$invoice->id) }}">Print Invoice A4</a></li>
+                                                        <li><a onclick="open_print_window(this); return false" href="{{ route('invoiceandsales.print_afour',$tableinvoice->id) }}">Print Invoice A4</a></li>
                                                     @endif
                                                     @if(userCanView('invoiceandsales.print_way_bill'))
-                                                        <li><a onclick="open_print_window(this); return false" href="{{ route('invoiceandsales.print_way_bill',$invoice->id) }}">Print Waybill</a></li>
+                                                        <li><a onclick="open_print_window(this); return false" href="{{ route('invoiceandsales.print_way_bill',$tableinvoice->id) }}">Print Waybill</a></li>
                                                     @endif
                                                 </ul>
                                             </div>

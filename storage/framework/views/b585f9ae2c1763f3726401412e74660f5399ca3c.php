@@ -225,8 +225,8 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <!--
-                                                    data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date"
-                                                    -->
+                                                            data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date"
+                                                            -->
                                             <div class="form-group">
                                                 <label for="invoice_date">Invoice / Sales date</label>
                                                 <input readonly id="invoice_date" class="form-control"
@@ -332,28 +332,7 @@
                                     </div>
                                 </section>
                             </section>
-                            <section class="panel">
-                                <header class="panel-heading panel-border">Payment Info.</header>
-                                <section class="panel-body">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Payment Method</label>
-                                        <select class="form-control" name="payment_method" id="payment_method">
-                                            <option value="">Select Payment Method</option>
-                                            <?php $__currentLoopData = $payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <option data-label="<?php echo e(strtolower($payment->name)); ?>"
-                                                    value="<?php echo e($payment->id); ?>"><?php echo e($payment->name); ?></option>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            <option data-label="split_method" value="split_method">MULTIPLE PAYMENT METHOD
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div id="more_info_appender">
-                                    </div>
-                                </section>
-                            </section>
                         </div>
-
-
                     </div>
 
                 </div>
@@ -672,68 +651,69 @@
                 '</th><td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td></tr>';
         }
 
-        function ProcessInvoice(btn) {
+        function ProcessInvoice(btn){
 
             const stock = wrapItemIncart();
 
-            if (stock.length === 0) {
+            if(stock.length === 0){
                 alert('You can not submit an empty cart, please add product to continue');
                 return false;
             }
 
-            <?php if(config('app.store') == 'inventory'): ?>
-                if ($('#invoice_paper_number').val() == "") {
-                    alert('Please enter Invoice / Receipt No from the manual invoice');
-                    return false;
-                }
-            <?php endif; ?>
+            <?php if(config('app.store') == "inventory"): ?>
+            if($('#invoice_paper_number').val() == ""){
+                alert('Please enter Invoice / Receipt No from the manual invoice');
+                return false;
+            }
+                    <?php endif; ?>
 
             let payment_payment = false;
 
             let status = $(btn).attr('data-status');
 
-            if (status === "COMPLETE") {
+            if(status === "COMPLETE"){
 
                 payment_payment = getPaymentInfo();
 
-                if (payment_payment == false) return;
+                if(payment_payment == false) return ;
 
             }
+            
 
 
-
-            if (!document.getElementById('customer_id')) {
+            if(!document.getElementById('customer_id')){
                 alert('Please select a customer to proceed..');
                 return false;
             }
 
-            $('.submit_btn').attr('disabled', 'disabled');
-            $('.errors').attr('style', 'display:none');
+            $('.submit_btn').attr('disabled','disabled');
+            $('.errors').attr('style','display:none');
             showMask('Creating Invoice, Please wait...');
 
-            var timeout = setTimeout(function() {
+            var timeout = setTimeout(function(){
                 hideMask();
                 alert('error - request timeout, please try generating the invoice again');
                 $('.submit_btn').removeAttr('disabled');
-            }, 30000);
+            },30000);
             $.ajax({
                 url: '<?php echo e(route('tableinvoice.create')); ?>',
-                method: 'POST',
+                method : 'POST',
                 data: {
-                    'data': JSON.stringify(stock),
+                    'data' : JSON.stringify(stock),
                     "_token": "<?php echo e(csrf_token()); ?>",
                     'status': status,
-                    'customer_id': $('#customer_id').val(),
-                    'date': $('#invoice_date').val(),
-                    'invoice_paper_number': $('#invoice_paper_number').val(),
-                    'payment': JSON.stringify(payment_payment)
+                    'customertable_id' :$('#customertable_id').val(),
+                    'customer_id' :$('#customer_id').val(),
+                    'date':$('#invoice_date').val(),
+                    'invoice_paper_number' : $('#invoice_paper_number').val(),
+                    'payment' : JSON.stringify(payment_payment)
                 },
-                success: function(returnData) {
+                success: function(returnData){
                     hideMask();
                     clearTimeout(timeout);
                     var res = returnData;
                     $('.submit_btn').removeAttr('disabled');
-                    if (res.status === true) {
+                    if(res.status === true){
                         $('#success_div').html(res.html);
                         $('#appender').html('');
                         calculateTotal();
@@ -743,19 +723,18 @@
                             keyboard: false, //remove option to close with keyboard
                             show: true //Display loader!
                         });
-                    } else {
+                    }else{
                         //HoldInvoice(document.getElementById('hold_invoice_hold'));
                         hideMask();
                         var errors = res.error;
-                        for (let key in errors) {
-                            if (document.getElementById('error_' + key)) {
-                                $(document.getElementById('error_' + key)).html(errors[key]).removeAttr(
-                                    'style');
+                        for(let key in errors){
+                            if(document.getElementById('error_'+key)){
+                                $(document.getElementById('error_'+key)).html(errors[key]).removeAttr('style');
                             }
                         }
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function(xhr, status, error){
                     hideMask();
                     clearTimeout(timeout);
                     var errorMessage = xhr.status + ': ' + xhr.statusText;
@@ -766,6 +745,7 @@
             });
             return false;
         }
+
 
         function IsJsonString(str) {
             try {

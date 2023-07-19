@@ -51,7 +51,8 @@ class TableInvoice extends Model
 
     use LogsActivity;
 
-    protected $table = 'invoices';
+
+    protected $table = 'table_invoices';
 
     protected $casts = [
         'customer_id' => 'int',
@@ -371,12 +372,11 @@ class TableInvoice extends Model
 
     public static function createInvoice($request, $reports)
     {
-
         $totals = self::calculateInvoiceTotal($reports);
 
         if (config('app.store') == "inventory") {
 
-            $invoice_paper_number_count = Invoice::where('invoice_paper_number', $request->get('invoice_paper_number'))->count();
+            $invoice_paper_number_count = TableInvoice::where('invoice_paper_number', $request->get('invoice_paper_number'))->count();
 
             if ($invoice_paper_number_count > 0)
                 $invoice_paper_number = $request->get('invoice_paper_number') . "-" . date('Y-m-d') . "-" . mt_rand();
@@ -386,7 +386,8 @@ class TableInvoice extends Model
             $invoice_paper_number = time();
         }
 
-        $invoice_data = [
+
+        $tableinvoice_data = [
             'invoice_number' => time(),
             'invoice_paper_number' => $invoice_paper_number,
             'customer_id' => $request->get('customer_id'),
@@ -408,37 +409,36 @@ class TableInvoice extends Model
             'sales_time' => Carbon::now()->toTimeString(),
         ];
 
-        $invoice = TableInvoice::create($invoice_data);
-
+        $invoice = TableInvoice::create($tableinvoice_data);
 
         //create invoice items
 
-        $invoice_items_data = self::prepareInvoiceItemData(
-            $reports,
-            $request->get('customer_id'),
-            $request->get('status'),
-            $request->get('date'),
-            Carbon::now()->toTimeString(),
-            $invoice
-        );
+        // $invoice_items_data = self::prepareInvoiceItemData(
+        //     $reports,
+        //     $request->get('customer_id'),
+        //     $request->get('status'),
+        //     $request->get('date'),
+        //     Carbon::now()->toTimeString(),
+        //     $invoice
+        // );
 
-        $invoice_items_batches_data = self::prepareInvoiceItemBatchesData(
-            $reports,
-            $request->get('customer_id'),
-            $request->get('status'),
-            $request->get('date'),
-            Carbon::now()->toTimeString(),
-            $invoice
-        );
+        // $invoice_items_batches_data = self::prepareInvoiceItemBatchesData(
+        //     $reports,
+        //     $request->get('customer_id'),
+        //     $request->get('status'),
+        //     $request->get('date'),
+        //     Carbon::now()->toTimeString(),
+        //     $invoice
+        // );
 
 
-        foreach ($invoice_items_data as $key => $invoice_items_datum) {
-            $invoice
-                ->invoice_items()
-                ->save($invoice_items_datum)
-                ->invoice_item_batches()
-                ->saveMany($invoice_items_batches_data[$key]);
-        }
+        // foreach ($invoice_items_data as $key => $invoice_items_datum) {
+        //     $invoice
+        //         ->invoice_items()
+        //         ->save($invoice_items_datum)
+        //         ->invoice_item_batches()
+        //         ->saveMany($invoice_items_batches_data[$key]);
+        // }
         return $invoice;
     }
 
