@@ -17,6 +17,7 @@ class CreateTableInvoiceItemBatchesTable extends Migration
             $table->engine = 'InnoDB';
             $table->id();
             $table->foreignId('invoice_id')->constrained()->cascadeOnDelete();
+            // $table->unsignedBigInteger('customertable_id')->nullable();
             $table->foreignId('invoice_item_id')->constrained()->cascadeOnDelete();
             $table->foreignId('warehousestore_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('department')->default('STORE');
@@ -32,6 +33,7 @@ class CreateTableInvoiceItemBatchesTable extends Migration
             $table->time("sales_time");
             $table->timestamps();
 
+            // $table->foreign('customertable_id')->references('id')->on('customer_table')->constrained()->cascadeOnDelete();
 
         });
     }

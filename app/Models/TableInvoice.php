@@ -39,8 +39,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
  *
  * @property User|null $user
  * @property Customer|null $customer
- * @property Collection|InvoiceItemBatch[] $invoice_item_batches
- * @property Collection|InvoiceItem[] $invoice_items
+ * @property Collection|InvoiceItemBatch[] $tableinvoice_item_batches
+ * @property Collection|InvoiceItem[] $tableinvoice_items
  *
  * @package App\Models
  */
@@ -139,12 +139,12 @@ class TableInvoice extends Model
 
     public function invoice_item_batches()
     {
-        return $this->hasMany(InvoiceItemBatch::class);
+        return $this->hasMany(TableInvoiceItemBatch::class);
     }
 
     public function invoice_items()
     {
-        return $this->hasMany(InvoiceItem::class);
+        return $this->hasMany(TableInvoiceItem::class);
     }
 
     public function payment()
@@ -413,32 +413,34 @@ class TableInvoice extends Model
 
         //create invoice items
 
-        // $invoice_items_data = self::prepareInvoiceItemData(
-        //     $reports,
-        //     $request->get('customer_id'),
-        //     $request->get('status'),
-        //     $request->get('date'),
-        //     Carbon::now()->toTimeString(),
-        //     $invoice
-        // );
+        $tableinvoice_items_data = self::prepareTableInvoiceItemData(
+            $reports,
+            $request->get('customer_id'),
+            $request->get('customertable_id'),
+            $request->get('status'),
+            $request->get('date'),
+            Carbon::now()->toTimeString(),
+            $invoice
+        );
 
-        // $invoice_items_batches_data = self::prepareInvoiceItemBatchesData(
-        //     $reports,
-        //     $request->get('customer_id'),
-        //     $request->get('status'),
-        //     $request->get('date'),
-        //     Carbon::now()->toTimeString(),
-        //     $invoice
-        // );
+        $tableinvoice_items_batches_data = self::prepareTableInvoiceItemBatchesData(
+            $reports,
+            $request->get('customer_id'),
+            $request->get('status'),
+            $request->get('date'),
+            Carbon::now()->toTimeString(),
+            $invoice
+        );
 
 
-        // foreach ($invoice_items_data as $key => $invoice_items_datum) {
-        //     $invoice
-        //         ->invoice_items()
-        //         ->save($invoice_items_datum)
-        //         ->invoice_item_batches()
-        //         ->saveMany($invoice_items_batches_data[$key]);
-        // }
+        foreach ($tableinvoice_items_data as $key => $tableinvoice_items_datum) {
+            $invoice
+                ->invoice_items()
+                ->save($tableinvoice_items_datum)
+                ->invoice_item_batches()
+                ->saveMany($tableinvoice_items_batches_data[$key]);
+        }
+
         return $invoice;
     }
 
@@ -506,7 +508,7 @@ class TableInvoice extends Model
     }
 
 
-    public static function prepareInvoiceItemData($validationReports, $customer_id, $status, $invoice_date, $sales_time, $invoice)
+    public static function prepareTableInvoiceItemData($validationReports, $customer_id, $customertable_id, $status, $invoice_date, $sales_time, $invoice)
     {
 
         $stocks = $validationReports['data'];
@@ -516,7 +518,6 @@ class TableInvoice extends Model
         $returnLogs = [];
 
         foreach ($stocks as $key => $stock) {
-
             if ($stock['prods']['type'] == "yard_qty") {
                 $stock['stock']->selling_price = $stock['prods']['price'];
                 $stock['stock']->cost_price = $stock['stock']->yard_cost_price;
@@ -528,10 +529,11 @@ class TableInvoice extends Model
 
             //remove stock quantity from database
 
-            $invoiceItems[$key] =  new InvoiceItem([
+            $invoiceItems[$key] =  new TableInvoiceItem([
                 'invoice_id' => $invoice->id,
                 'stock_id' => $key,
                 'quantity' => $stock['prods']['qty'],
+                'customertable_id' => $customertable_id,
                 'customer_id' => $customer_id,
                 'department' => auth()->user()->department,
                 'status' => $status,
@@ -556,6 +558,7 @@ class TableInvoice extends Model
                 $returnLogs[] = [
                     'store_after' => $stock['prods']['type'],
                     'stock_id' => $stock['stock']->id,
+                    'customertable_id' => $customertable_id,
                     'warehousestore_id' => getActiveStore()->id,
                     'invoice_number' => $invoice->invoice_number,
                     'invoice_paper_number' => $invoice->invoice_paper_number,
@@ -579,7 +582,7 @@ class TableInvoice extends Model
         return $invoiceItems;
     }
 
-    public static function prepareInvoiceItemBatchesData($validationReports, $customer_id, $status, $invoice_date, $sales_time, $invoice)
+    public static function prepareTableInvoiceItemBatchesData($validationReports, $customer_id, $status, $invoice_date, $sales_time, $invoice)
     {
 
         $invoiceItemBatches = [];
@@ -602,7 +605,7 @@ class TableInvoice extends Model
 
             foreach ($stock['batches'] as $batch) {
 
-                $invoiceItemBatches[$key][] =  new InvoiceItemBatch([
+                $invoiceItemBatches[$key][] =  new TableInvoiceItemBatch([
                     'invoice_id' => $invoice->id,
                     'stock_id' => $key,
                     'stockbatch_id' => $batch['id'],

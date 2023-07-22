@@ -220,7 +220,7 @@
                                     style="font-size: 25px">0.00</header>
                             </section>
                             <section class="panel">
-                                <header class="panel-heading panel-border">Invoice Info.</header>
+                                <header class="panel-heading panel-border">Table Invoice Info.</header>
                                 <section class="panel-body">
                                     <div class="row">
                                         <div class="col-sm-6">
