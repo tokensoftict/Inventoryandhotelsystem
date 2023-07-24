@@ -19,7 +19,7 @@
 <div class="sign-in-wrapper">
     <div class="sign-container">
         <div class="text-center">
-            <h2 class="logo">{{ getStoreSettings()->name }}</h2>
+            {{-- <h2 class="logo">{{ getStoreSettings()->name }}</h2> --}}
             <h4>Sign In</h4>
         </div>
         @if(session()->has('message'))

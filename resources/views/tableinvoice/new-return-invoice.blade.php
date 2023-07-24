@@ -152,17 +152,15 @@
                             </section>
                             <section class="panel" style="height: 73vh;overflow: scroll">
                                 <section class="panel-body panel-border">
-                                    <table class="table table-condensed table-bordered" style="font-size: 11px">
+                                    <table class="table table-condensed table-bordered" style="font-size: 12px">
                                         <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th style="width: 25%;">Name</th>
-                                            <th>Quantity</th>
-                                            <th style="width: 15%;">{{ config('app.store') == "inventory" ? "Type" : "Price Type" }}</th>
-                                            <th style="width: 15%;">Price</th>
-                                            <th>Total</th>
-                                            <th>Action</th>
-                                        </tr>
+                                        <th></th>
+                                        <th style="width: 25%;">Name</th>
+                                        <th>Quantity</th>
+                                        <th style="width: 15%;">{{ config('app.store') == "inventory" ? "Type" : "Price Type" }}</th>
+                                        <th style="width: 15%;">Price</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
                                         </thead>
                                         <tbody id="appender">
 
@@ -195,12 +193,7 @@
                             @if(userCanView('invoiceandsales.create'))
                                 <section class="panel">
                                     <section class="panel-body panel-border text-center">
-                                        @if(userCanView('invoiceandsales.draft_invoice'))
-                                            <button type="button"  data-status="DRAFT" class="btn btn-success btn-lg" onclick="return ProcessInvoice(this);">Save Draft</button>
-                                        @endif
-                                        @if(userCanView('invoiceandsales.complete_invoice'))
-                                            <button type="button"  data-status="COMPLETE" class="btn btn-primary btn-lg" onclick="return ProcessInvoice(this);">Complete Invoice</button>
-                                        @endif
+                                        <button type="button"  data-status="COMPLETE" class="btn btn-primary btn-lg" onclick="return ProcessInvoice(this);">Return Invoice</button>
                                     </section>
                                 </section>
                             @endif
@@ -212,32 +205,12 @@
                                 <section class="panel-body">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <!--
-                                            data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date"
-                                            -->
                                             <div class="form-group">
                                                 <label for="invoice_date">Invoice / Sales date</label>
-                                                <input readonly  id="invoice_date" class="form-control" value="{{ date('Y-m-d') }}"  placeholder="Invoice / Sales date" type="text">
+                                                <input value="{{ date('Y-m-d') }}" data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date" placeholder="Invoice / Sales date" type="text">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            @if(config('app.store') == "hotel")
-                                                @if(auth()->user()->customer_id != "0")
-                                                    <h6>Customer : </h6>
-                                                    <h6><b>{{ auth()->user()->name }}</b></h6>
-                                                @else
-                                                    <div class="form-group">
-                                                        <label for="exampleInputEmail1">Customer Name</label>
-                                                        <select class="form-control  select-customer"  name="customer" id="customer_id">
-                                                            @foreach($customers as $customer)
-                                                                <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                 @endif
-
-                                                <input type="hidden"  id="customer_id" name="customer" value="{{ auth()->user()->customer_id }}"/>
-                                             @else
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1">Customer Name</label>
                                                 <select class="form-control  select-customer"  name="customer" id="customer_id">
@@ -245,9 +218,7 @@
                                                         <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
                                                     @endforeach
                                                 </select>
-                                                <a href="#" data-toggle="modal" data-target="#newCustomer" class="text-success" style="display: block;text-align: center">Add New Customer</a>
                                             </div>
-                                            @endif
                                         </div>
                                     </div>
                                     <div class="row">
@@ -300,55 +271,13 @@
             </div>
         </div>
     </div>
-    @if(userCanView('customer.store'))
-        <div class="modal fade" id="newCustomer" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">New Customer</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger" id="error_reg" style="display: none;"></div>
-                    <form id="new_customer_form" action="{{ route('customer.store') }}?ajax=true"  enctype="multipart/form-data" method="post">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                            <label>First Name</label>
-                            <input type="text"  required  class="form-control" name="firstname" placeholder="First Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name</label>
-                            <input type="text"  required  class="form-control" name="lastname" placeholder="Last Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="text"    class="form-control" name="email" placeholder="Email Address"/>
-                        </div>
 
-                        <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="text" required  class="form-control" name="phone_number" placeholder="Phone Number"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Address</label>
-                            <textarea class="form-control" placeholder="Address" name="address"></textarea>
-                        </div>
-                        <div>
-                            <button type="submit" id="add_customer" class="btn btn-success btn-sm">Add Customer</button>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
 @endsection
 
 
 @push('js')
     <script>
-        productfindurl = "{{ route('findstock') }}"
+        productfindurl = "{{ route('findanystock') }}"
     </script>
     <script data-turbolinks-eval="false" data-turbo-eval="false" src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
     <script data-turbolinks-eval="false" data-turbo-eval="false" src="{{ asset('assets/js/init-select2.js') }}"></script>
@@ -406,7 +335,6 @@
         }
 
         function bindIncrement(){
-            let qty_before = 1;
 
             $('.item_text_price').off('keyup');
             $('.item_text_price').on('keyup',function(){
@@ -414,6 +342,8 @@
                 textb.attr('data-price',$(this).val());
                 calculateTotal();
             });
+
+            let qty_before = 1;
             $('.btn-number').off("click");
             $('.btn-number').click(function(e){
                 e.preventDefault();
@@ -427,18 +357,21 @@
                         if(currentVal > input.attr('min')) {
                             input.val(currentVal - 1).change();
                         }
+                        /*
                         if(parseInt(input.val()) == input.attr('min')) {
                             $(this).attr('disabled', true);
                         }
                         if(parseInt(input.val()) < input.attr('max')){
                             $(this).parent().parent().find('.plus').removeAttr('disabled')
                         }
+                        */
 
                     } else if(type == 'plus') {
-
                         if(currentVal < input.attr('max')) {
                             input.val(currentVal + 1).change();
                         }
+                    /*
+
                         if(parseInt(input.val()) == input.attr('max')) {
                             $(this).attr('disabled', true);
                         }
@@ -446,6 +379,7 @@
                         if(parseInt(input.val()) > input.attr('min')){
                             $(this).parent().parent().find('.minus').removeAttr('disabled')
                         }
+                        */
 
                     }
                 } else {
@@ -456,17 +390,21 @@
 
             $('.input-number').off('keyup');
             $('.input-number').on('keyup',function () {
+                /*
                 if(parseInt($(this).val()) < parseInt($(this).attr('max'))) {
                     qty_before = $(this).val();
                 }
+                */
             })
 
             $('.input-number').off('change');
             $('.input-number').on('change',function(){
+                /*
                 if(parseInt($(this).val()) > parseInt($(this).attr('max'))){
                     alert('Not enough quantity, Please add more quantity and re-add the product');
                     $(this).val(qty_before);
                 }
+                */
                 calculateTotal();
             })
         }
@@ -528,7 +466,7 @@
                 if (day.length == 1) {
                     day = "0" + day;
                 }
-9                return year + "-" + month + "-" + day;
+                return year + "-" + month + "-" + day;
             }
         })();
 
@@ -598,7 +536,7 @@
                 if(payment_payment == false) return ;
 
             }
-            
+
 
 
             if(!document.getElementById('customer_id')){
@@ -616,7 +554,7 @@
                 $('.submit_btn').removeAttr('disabled');
             },30000);
             $.ajax({
-                url: '{{ route('invoiceandsales.create') }}',
+                url: '{{ route('invoiceandsales.add_return_invoice') }}',
                 method : 'POST',
                 data: {
                     'data' : JSON.stringify(stock),
@@ -645,11 +583,15 @@
                     }else{
                         //HoldInvoice(document.getElementById('hold_invoice_hold'));
                         hideMask();
-                        var errors = res.error;
-                        for(let key in errors){
-                            if(document.getElementById('error_'+key)){
-                                $(document.getElementById('error_'+key)).html(errors[key]).removeAttr('style');
+                        if(res.error !=false) {
+                            var errors = res.error;
+                            for (let key in errors) {
+                                if (document.getElementById('error_' + key)) {
+                                    $(document.getElementById('error_' + key)).html(errors[key]).removeAttr('style');
+                                }
                             }
+                        }else{
+                            alert(res.singleError)
                         }
                     }
                 },
@@ -730,25 +672,25 @@
 
                     @if(config('app.store') == "hotel")
 
-                        if($(this).attr('data-key') == "4" &&  parseFloat($(this).val()) > 0 && $('#customer_id').val() === "1"){
-                            alert("You can not sell credit to a Generic Customer, Please select real customer");
-                            error = true;
-                            return false;
-                        }
+                    if($(this).attr('data-key') == "4" &&  parseFloat($(this).val()) > 0 && $('#customer_id').val() === "1"){
+                        alert("You can not sell credit to a Generic Customer, Please select real customer");
+                        error = true;
+                        return false;
+                    }
 
                     @elseif(config('app.store') == "inventory")
 
-                        if(getTotalSplitPayemnt() !== calculateTotal() && $('#customer_id').val() === "1")
-                        {
-                            alert("You can not sell credit to a Generic Customer, Please select real customer");
-                            error = true;
-                            return false;
-                        }
+                    if(getTotalSplitPayemnt() !== calculateTotal() && $('#customer_id').val() === "1")
+                    {
+                        alert("You can not sell credit to a Generic Customer, Please select real customer");
+                        error = true;
+                        return false;
+                    }
 
                     @endif
 
 
-                    data[$(this).attr('data-key')] = $(this).val();
+                        data[$(this).attr('data-key')] = $(this).val();
 
                     payment_info_data[$(this).attr('data-key')] = {};
 
@@ -830,9 +772,9 @@
                         $("#more_info_appender").html('<div id="transfer"><div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select Bank-</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div></div>')
                     } else if (selected === "cash") {
                         /*
-                        <div class="form-group"> <label>Cash Tendered</label> <input class="form-control" type="number" step="0.00001" id="cash_tendered" name="cash_tendered" required placeholder="Cash Tendered"/></div><div class="form-group well"><center>Customer Change</center><h1 align="center" style="font-size: 55px; margin: 0; padding: 0 font-weight: bold;" id="customer_change">0.00</h1></div>
+                        <br/><div class="form-group"> <label>Cash Tendered</label> <input class="form-control" type="number" step="0.00001" id="cash_tendered" name="cash_tendered" required placeholder="Cash Tendered"/></div><div class="form-group well"><center>Customer Change</center><h1 align="center" style="font-size: 55px; margin: 0; padding: 0 font-weight: bold;" id="customer_change">0.00</h1></div>
                          */
-                        $("#more_info_appender").html('<div id="cash"> <br/></div>')
+                        $("#more_info_appender").html('<div id="cash"></div>')
                         handle_cash();
                     } else if (selected === "pos") {
                         $("#more_info_appender").html('<div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select POS Bank-</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div>')
@@ -878,59 +820,6 @@
                 })
 
             }
-
-
-
-            $("#new_customer_form").on("submit",function(){
-                var form__ = $(this);
-                $('#error_reg').html("").attr('style','display: none');
-                $(this).find(".form-control").attr('disabled','disabled');
-                $(this).attr('style','opacity:0.8;');
-                var form = $(this);
-                var data ={};
-                var _data = new Array();
-                form.find('.form-control').each(function(id,elem){
-                    data[$(elem).attr('name')]= $(elem).val();
-                    _data.push($(elem).attr('name'));
-                });
-                data['_token'] = "{{ csrf_token() }}";
-                $('#add_customer').attr("disabled","disabled");
-                $.post($(this).attr('action'),data,function(response,status){
-                    $('#add_customer').removeAttr("disabled");
-                    form__.find(".form-control").removeAttr('disabled');
-                    form__.removeAttr('style');
-                    if(response.status === true){
-                       var newCustomer = new Option(response.value,response.id,true,true);
-                       $('#customer_id').append(newCustomer).trigger('change');
-                        $('#newCustomer').modal('hide');
-                        form__.find(".form-control").val('');
-                        form__.find(".form-control").html('');
-                    }else{
-                        $err = "<li style='list-style: none;color: #FFF; font-size: 11px'>" + response.message + "</li>";
-                        $('#error_reg').html($err).attr('style','display: block');
-                    }
-                }) .done(function() {
-                }).fail(function(status) {
-                    form__.find(".form-control").removeAttr('disabled');
-                    form__.removeAttr('style');
-
-                    $('#add_customer').removeAttr("disabled");
-                    var form = $("#new_customer_form");
-                    var _data = new Array();
-                    form.find('.form-control').each(function(id,elem){
-                        _data.push($(elem).attr('name'));
-                    });
-                    var errors =  status.responseJSON.errors;
-                    var html = "";
-                    for(var i =0; i < _data.length; i++){
-                        if(errors[_data[i]] !== undefined) {
-                            html += "<li style='list-style: none;color: #FFF; font-size: 11px'>" + errors[_data[i]] + "</li>";
-                        }
-                    }
-                    $('#error_reg').html(html).removeAttr('style');
-                });
-                return false;
-            });
 
 
         });

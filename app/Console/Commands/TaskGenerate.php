@@ -34,6 +34,7 @@ class TaskGenerate extends Command
      *
      * @return void
      */
+
     public function __construct()
     {
         parent::__construct();
@@ -53,6 +54,7 @@ class TaskGenerate extends Command
             'CustomerManager'=>'Customer Manager',
             'StockManager'=>"Stock Manager",
             'InvoiceAndSales'=>"Invoice & Sales",
+            'TableInvoice' => "Table Invoice",
             'PurchaseOrders'=>"Purchase Orders",
             'PurchaseReport'=>"Supplier/Purchase Order",
             'InvoiceReport'=>"Invoice Reports",

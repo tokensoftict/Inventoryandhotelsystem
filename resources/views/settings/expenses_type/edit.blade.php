@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('content')
     <div class="ui-container">
         <div class="row">
@@ -10,7 +9,7 @@
                             {{ $title }}
                         </header>
                         <div class="panel-body">
-                            <form id="validate" action="{{ route('expenses_type.update',$expenses_type->id) }}" enctype="multipart/form-data" method="post">
+                            <form id="validate" action="{{ route('customer_table.update',$expenses_type->id) }}" enctype="multipart/form-data" method="post">
                                 {{ csrf_field() }}
                                 {{ method_field('PUT') }}
                                 <div class="form-group">

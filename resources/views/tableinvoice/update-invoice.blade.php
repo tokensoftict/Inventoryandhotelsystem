@@ -152,20 +152,45 @@
                             </section>
                             <section class="panel" style="height: 73vh;overflow: scroll">
                                 <section class="panel-body panel-border">
-                                    <table class="table table-condensed table-bordered" style="font-size: 11px">
+                                    <table class="table table-condensed table-bordered" style="font-size: 12px">
                                         <thead>
                                         <tr>
                                             <th></th>
-                                            <th style="width: 25%;">Name</th>
+                                            <th style="width: 35%;">Name</th>
                                             <th>Quantity</th>
                                             <th style="width: 15%;">{{ config('app.store') == "inventory" ? "Type" : "Price Type" }}</th>
-                                            <th style="width: 15%;">Price</th>
+                                            <th>Price</th>
                                             <th>Total</th>
                                             <th>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody id="appender">
-
+                                        @foreach($invoice->invoice_items as $items)
+                                            <tr style="cursor: pointer" id="product_{{  $items->stock->id }}">
+                                                <th  class="text-center"><input data-image="{{ $items->stock->image }}" name="picture" class="picture" value="1" type="radio"></th>
+                                                <th>{{ $items->stock->name }}<div id="error_{{ $items->stock->id }}" class="errors alert alert-danger" style="display:none;"></div></th>
+                                                <td><div class="col-md-4"><div class="input-group"> <span class="input-group-btn input-group-sm"> <button  data-field="quant[1]" type="button" class="btn btn-danger btn-number minus" data-type="minus"> <i class="fa fa-minus"></i></button></span><input class="form-control text-center input-number" data-invoice-item-id="{{ $items->id }}"  data-id="{{ $items->stock->id }}" data-price="{{ $items->selling_price }}" style="width:100px;display: block;" required="" max="{{ $items->store == "quantity" ? $items->stock->available_quantity+ $items->quantity  :  $items->stock->yard_available_quantity+ $items->quantity }}" min="1" type="number" value="{{ $items->quantity }}"> <span class="input-group-btn"> <button type="button" class="btn btn-primary btn-number plus" data-type="plus"><i class="fa fa-plus"></i> </button> </span></div></div>
+                                                <td>
+                                                    <select class="form-control product_type">
+                                                        @if($items->store == getActiveStore()->packed_column)
+                                                            @if(config('app.store') == "inventory")
+                                                                <option value="{{ getActiveStore()->packed_column }}" {{ $items->store == getActiveStore()->packed_column ? "selected" : "" }} data-price="{{ $items->selling_price }}" data-av-qty="{{ $items->stock->available_quantity+ $items->quantity }}">Packed</option>
+                                                                <option value="{{ getActiveStore()->yard_column }}" {{ $items->store == getActiveStore()->yard_column ? "selected" : "" }} data-price="{{ $items->stock->yard_selling_price }}" data-av-qty="{{ $items->stock->available_yard_quantity }}">Pieces / Yards</option>
+                                                            @else
+                                                                <option value="{{ getActiveStore()->packed_column }}" {{ $items->selling_price == $items->stock->selling_price ? "selected" : "" }} data-price="{{ $items->selling_price }}" data-av-qty="{{ $items->stock->available_quantity+ $items->quantity }}">NORMAL PRICE</option>
+                                                                <option value="{{ getActiveStore()->yard_column }}" {{ $items->selling_price == $items->stock->vip_selling_price ? "selected" : "" }} data-price="{{ $items->stock->vip_selling_price }}" data-av-qty="{{ $items->stock->available_quantity }}">VIP PRICE</option>
+                                                            @endif
+                                                        @else
+                                                            <option value="{{ getActiveStore()->packed_column }}" data-price="{{ $items->selling_price }}" data-av-qty="{{ $items->stock->available_quantity }}">Packed</option>
+                                                            <option value="{{ getActiveStore()->yard_column }}" selected data-price="{{ $items->stock->yard_selling_price }}" data-av-qty="{{ $items->stock->available_yard_quantity+ $items->quantity }}">Pieces / Yards</option>
+                                                        @endif
+                                                    </select>
+                                                </td>
+                                                <th class="text-right item_price">{{ number_format($items->selling_price,2) }}</th>
+                                                <th class="text-right item_total">{{ number_format($items->total_selling_price,2) }}</th>
+                                                <td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td>
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                         <tfoot>
                                         <tr>
@@ -174,7 +199,7 @@
                                             <th class="text-left"></th>
                                             <th class="text-center"></th>
                                             <th class="text-right" colspan="2">Sub Total</th>
-                                            <th class="text-right"  colspan="2" id="sub_total">0.00</th>
+                                            <th class="text-right"  colspan="2" id="sub_total">{{ number_format($invoice->sub_total,2) }}</th>
                                             <th class="text-right"></th>
                                         </tr>
                                         <tr>
@@ -183,7 +208,7 @@
                                             <th class="text-center" ></th>
                                             <th class="text-center" ></th>
                                             <th class="text-right" colspan="2">Total</th>
-                                            <th class="text-right total_invoice" colspan="2" style="font-size: 15px;">0.00</th>
+                                            <th class="text-right total_invoice" colspan="2" style="font-size: 15px;">{{ number_format($invoice->sub_total,2) }}</th>
                                             <th class="text-right"></th>
                                         </tr>
                                         </tfoot>
@@ -195,7 +220,7 @@
                             @if(userCanView('invoiceandsales.create'))
                                 <section class="panel">
                                     <section class="panel-body panel-border text-center">
-                                        @if(userCanView('invoiceandsales.draft_invoice'))
+                                        @if($invoice->status == "DRAFT" && userCanView('invoiceandsales.draft_invoice'))
                                             <button type="button"  data-status="DRAFT" class="btn btn-success btn-lg" onclick="return ProcessInvoice(this);">Save Draft</button>
                                         @endif
                                         @if(userCanView('invoiceandsales.complete_invoice'))
@@ -205,19 +230,16 @@
                                 </section>
                             @endif
                             <section class="panel">
-                                <header class="panel-heading panel-border total_invoice text-center" style="font-size: 25px">0.00</header>
+                                <header class="panel-heading panel-border total_invoice text-center" style="font-size: 25px">{{ number_format($invoice->sub_total,2) }}</header>
                             </section>
                             <section class="panel">
                                 <header class="panel-heading panel-border">Invoice Info.</header>
                                 <section class="panel-body">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <!--
-                                            data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date"
-                                            -->
                                             <div class="form-group">
                                                 <label for="invoice_date">Invoice / Sales date</label>
-                                                <input readonly  id="invoice_date" class="form-control" value="{{ date('Y-m-d') }}"  placeholder="Invoice / Sales date" type="text">
+                                                <input value="{{ date('Y-m-d',strtotime($invoice->invoice_date)) }}" data-min-view="2" data-date-format="yyyy-mm-dd" class="form-control datepicker js-datepicker" id="invoice_date" placeholder="Invoice / Sales date" type="text">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -230,34 +252,34 @@
                                                         <label for="exampleInputEmail1">Customer Name</label>
                                                         <select class="form-control  select-customer"  name="customer" id="customer_id">
                                                             @foreach($customers as $customer)
-                                                                <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
+                                                                <option {{ $invoice->customer_id == $customer->id ? "selected" : "" }} value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                 @endif
+                                                @endif
 
                                                 <input type="hidden"  id="customer_id" name="customer" value="{{ auth()->user()->customer_id }}"/>
-                                             @else
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Customer Name</label>
-                                                <select class="form-control  select-customer"  name="customer" id="customer_id">
-                                                    @foreach($customers as $customer)
-                                                        <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <a href="#" data-toggle="modal" data-target="#newCustomer" class="text-success" style="display: block;text-align: center">Add New Customer</a>
-                                            </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Customer Name</label>
+                                                    <select class="form-control  select-customer"  name="customer" id="customer_id">
+                                                        @foreach($customers as $customer)
+                                                            <option {{ $invoice->customer_id == $customer->id ? "selected" : "" }} value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <a href="#" data-toggle="modal" data-target="#newCustomer" class="text-success" style="display: block;text-align: center">Add New Customer</a>
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6" style="margin-top: 0px">
+                                        <div class="col-sm-6">
                                             <img id="imageThumb" src="{{ asset('assets/products.jpg') }}" class="img-thumbnail">
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1">Invoice / Receipt No</label>
-                                                <input class="form-control" id="invoice_paper_number"  placeholder="Invoice / Receipt No" type="text">
+                                                <input class="form-control" id="invoice_paper_number" value="{{ $invoice->invoice_paper_number }}"  placeholder="Invoice / Receipt No" type="text">
                                             </div>
                                         </div>
                                     </div>
@@ -300,48 +322,49 @@
             </div>
         </div>
     </div>
+
     @if(userCanView('customer.store'))
         <div class="modal fade" id="newCustomer" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">New Customer</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger" id="error_reg" style="display: none;"></div>
-                    <form id="new_customer_form" action="{{ route('customer.store') }}?ajax=true"  enctype="multipart/form-data" method="post">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                            <label>First Name</label>
-                            <input type="text"  required  class="form-control" name="firstname" placeholder="First Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name</label>
-                            <input type="text"  required  class="form-control" name="lastname" placeholder="Last Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="text"    class="form-control" name="email" placeholder="Email Address"/>
-                        </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">New Customer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" id="error_reg" style="display: none;"></div>
+                        <form id="new_customer_form" action="{{ route('customer.store') }}?ajax=true"  enctype="multipart/form-data" method="post">
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text"  required  class="form-control" name="firstname" placeholder="First Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text"  required  class="form-control" name="lastname" placeholder="Last Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text"    class="form-control" name="email" placeholder="Email Address"/>
+                            </div>
 
-                        <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="text" required  class="form-control" name="phone_number" placeholder="Phone Number"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Address</label>
-                            <textarea class="form-control" placeholder="Address" name="address"></textarea>
-                        </div>
-                        <div>
-                            <button type="submit" id="add_customer" class="btn btn-success btn-sm">Add Customer</button>
-                        </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="text" required  class="form-control" name="phone_number" placeholder="Phone Number"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea class="form-control" placeholder="Address" name="address"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" id="add_customer" class="btn btn-success btn-sm">Add Customer</button>
+                            </div>
 
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     @endif
 @endsection
 
@@ -397,23 +420,14 @@
                 @else
                 price.attr('max',$('option:selected', this).attr('data-av-qty'));
                 price.attr('data-price',$('option:selected', this).attr('data-price'));
-                td_price.html('<input type="text" step="0.00000001" class="item_text_price form-control" value="'+$('option:selected', this).attr('data-price')+'"/>')
+                td_price.html('<input type="text" step="0.00000001" class="item_text_price form-control" value="'+parseFloat($('option:selected', this).attr('data-price')).toFixed(1)+'"/>')
                 bindproductType();
-                bindIncrement();
                 @endif
-                calculateTotal();
             });
         }
 
         function bindIncrement(){
             let qty_before = 1;
-
-            $('.item_text_price').off('keyup');
-            $('.item_text_price').on('keyup',function(){
-                const textb = $(this).parent().parent().find('.input-number');
-                textb.attr('data-price',$(this).val());
-                calculateTotal();
-            });
             $('.btn-number').off("click");
             $('.btn-number').click(function(e){
                 e.preventDefault();
@@ -502,7 +516,8 @@
                         id: $(this).attr('data-id'),
                         qty: $(this).val(),
                         type: type.val(),
-                        price : $(this).attr('data-price')
+                        price : $(this).attr('data-price'),
+                        invoice_item_id : $(this).attr('data-invoice-item-id')
                     }
                 );
                 if(parseInt($(elem).val()) > parseInt($(elem).attr('max'))){
@@ -528,7 +543,7 @@
                 if (day.length == 1) {
                     day = "0" + day;
                 }
-9                return year + "-" + month + "-" + day;
+                return year + "-" + month + "-" + day;
             }
         })();
 
@@ -568,17 +583,10 @@
                 data.stock.selling_price = data.stock.yard_selling_price
             }
 
-            return '<tr style="cursor: pointer" id="product_'+data.stock.id+'"><th  class="text-center"><input data-image="'+data.stock.image+'" name="picture" class="picture" value="1" type="radio"></th><th>'+data.stock.name+'<div id="error_'+data.stock.id+'" class="errors alert alert-danger" '+(data['error'] ? '' : 'style="display:none;"')+'>'+(data['error'] ? data['error'] : '')+'</div>'+'</th><td><div class="col-md-4"><div class="input-group"> <span class="input-group-btn input-group-sm"> <button  data-field="quant[1]" type="button" class="btn btn-danger btn-number minus" data-type="minus"> <i class="fa fa-minus"></i></button></span><input class="form-control text-center input-number"  data-id="'+data.stock.id+'" data-price="'+data.stock.selling_price+'" style="width:100px;display: block;" required="" max="'+data.stock.available_quantity+'" min="1" type="number" value="1"> <span class="input-group-btn"> <button type="button" class="btn btn-primary btn-number plus" data-type="plus"><i class="fa fa-plus"></i> </button> </span></div></div><td>'+type_select+'</td><th class="text-right item_price">@if(config('app.store')=="inventory")<input type="text" step="0.00000001" class="item_text_price form-control" value="'+data.stock.selling_price+'"/>@else'+formatMoney(data.stock.selling_price)+'  @endif</th><th class="text-right item_total">'+formatMoney(data.stock.selling_price)+'</th><td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td></tr>';
+            return '<tr style="cursor: pointer" id="product_'+data.stock.id+'"><th  class="text-center"><input data-image="'+data.stock.image+'" name="picture" class="picture" value="1" type="radio"></th><th>'+data.stock.name+'<div id="error_'+data.stock.id+'" class="errors alert alert-danger" '+(data['error'] ? '' : 'style="display:none;"')+'>'+(data['error'] ? data['error'] : '')+'</div>'+'</th><td><div class="col-md-4"><div class="input-group"> <span class="input-group-btn input-group-sm"> <button  data-field="quant[1]" type="button" class="btn btn-danger btn-number minus" data-type="minus"> <i class="fa fa-minus"></i></button></span><input class="form-control text-center input-number" data-invoice-item-id="new"  data-id="'+data.stock.id+'" data-price="'+data.stock.selling_price+'" style="width:100px;display: block;" required="" max="'+data.stock.available_quantity+'" min="1" type="number" value="1"> <span class="input-group-btn"> <button type="button" class="btn btn-primary btn-number plus" data-type="plus"><i class="fa fa-plus"></i> </button> </span></div></div><td>'+type_select+'</td>@if(config('app.store')=="inventory")<input type="text" step="0.00000001" class="item_text_price form-control" value="'+data.stock.selling_price+'"/>@else'+formatMoney(data.stock.selling_price)+'  @endif<th class="text-right item_total">'+formatMoney(data.stock.selling_price)+'</th><td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td></tr>';
         }
 
         function ProcessInvoice(btn){
-
-            const stock = wrapItemIncart();
-
-            if(stock.length === 0){
-                alert('You can not submit an empty cart, please add product to continue');
-                return false;
-            }
 
             @if(config('app.store') == "inventory")
             if($('#invoice_paper_number').val() == ""){
@@ -586,7 +594,6 @@
                 return false;
             }
                     @endif
-
             let payment_payment = false;
 
             let status = $(btn).attr('data-status');
@@ -598,8 +605,13 @@
                 if(payment_payment == false) return ;
 
             }
-            
 
+            const stock = wrapItemIncart();
+
+            if(stock.length === 0){
+                alert('You can not submit an empty cart, please add product to continue');
+                return false;
+            }
 
             if(!document.getElementById('customer_id')){
                 alert('Please select a customer to proceed..');
@@ -616,8 +628,8 @@
                 $('.submit_btn').removeAttr('disabled');
             },30000);
             $.ajax({
-                url: '{{ route('invoiceandsales.create') }}',
-                method : 'POST',
+                url: '{{ route('invoiceandsales.update',$invoice->id) }}',
+                method : 'PUT',
                 data: {
                     'data' : JSON.stringify(stock),
                     "_token": "{{ csrf_token() }}",
@@ -625,7 +637,7 @@
                     'customer_id' :$('#customer_id').val(),
                     'date':$('#invoice_date').val(),
                     'invoice_paper_number' : $('#invoice_paper_number').val(),
-                    'payment' : JSON.stringify(payment_payment)
+                    'payment' : payment_payment
                 },
                 success: function(returnData){
                     hideMask();
@@ -730,27 +742,24 @@
 
                     @if(config('app.store') == "hotel")
 
-                        if($(this).attr('data-key') == "4" &&  parseFloat($(this).val()) > 0 && $('#customer_id').val() === "1"){
-                            alert("You can not sell credit to a Generic Customer, Please select real customer");
-                            error = true;
-                            return false;
-                        }
+                    if($(this).attr('data-key') == "4" &&  parseFloat($(this).val()) > 0 && $('#customer_id').val() === "1"){
+                        alert("You can not sell credit to a Generic Customer, Please select real customer");
+                        error = true;
+                        return false;
+                    }
 
                     @elseif(config('app.store') == "inventory")
 
-                        if(getTotalSplitPayemnt() !== calculateTotal() && $('#customer_id').val() === "1")
-                        {
-                            alert("You can not sell credit to a Generic Customer, Please select real customer");
-                            error = true;
-                            return false;
-                        }
+                    if(getTotalSplitPayemnt() !== calculateTotal() && $('#customer_id').val() === "1")
+                    {
+                        alert("You can not sell credit to a Generic Customer, Please select real customer");
+                        error = true;
+                        return false;
+                    }
 
                     @endif
 
-
                     data[$(this).attr('data-key')] = $(this).val();
-
-                    payment_info_data[$(this).attr('data-key')] = {};
 
                     if($(this).attr('data-key') == "3"){
                         if( $('#bank_id_3').val() === "" &&  parseFloat($(this).val()) > 0){
@@ -761,7 +770,7 @@
                         }
                         payment_info_data[$(this).attr('data-key')] = {
                             'payment_method_id' : 3,
-                            'bank_id' : $('#bank_id_3').val(),
+                            'bank_id' : $('#bank').val(),
                         }
                     }else if($(this).attr('data-key') == "2"){
                         if( $('#bank_id_2').val() === "" &&  parseFloat($(this).val()) > 0){
@@ -772,7 +781,7 @@
                         }
                         payment_info_data[$(this).attr('data-key')] = {
                             'payment_method_id' : 3,
-                            'bank_id' : $('#bank_id_2').val(),
+                            'bank_id' : $('#bank').val(),
                         }
                     }else if($(this).attr('data-key') == "1"){
                         payment_info_data[$(this).attr('data-key')] = {
@@ -797,7 +806,7 @@
                     return false;
                 }
                 @endif
-                    return {
+                return {
                     'split_method':data,
                     'payment_method_id':$('#payment_method').val(),
                     'payment_info_data' : payment_info_data
@@ -822,6 +831,12 @@
 
 
         $(document).ready(function(){
+
+            bindIncrement();
+            bindAllTr();
+            bindproductType();
+            calculateTotal();
+
             $("#payment_method").on("change",function () {
                 if($(this).val() !=="") {
                     var selected = $("#payment_method option:selected").attr("data-label");
@@ -837,7 +852,7 @@
                     } else if (selected === "pos") {
                         $("#more_info_appender").html('<div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select POS Bank-</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div>')
                     } else if (selected === "split_method") {
-                        $("#more_info_appender").html('<div id="split_method"> <br/><h5>MULTIPLE PAYMENT METHOD</h5><table class="table table-striped"> @foreach($payments as $pmthod) @if($pmthod->id==4 && config('app.store') == "inventory") @continue @endif<tr><td style="font-size: 15px;">{{ ucwords($pmthod->name) }}</td><td class="text-right" align="right"><input value="0" step="0.00001" required class="form-control pull-right split_control" style="width: 100px;" type="number" data-key="{{ $pmthod->id }}" name="split_method[{{ $pmthod->id }}]"</td><td>@if($pmthod->id != 4 && $pmthod->id!=1)<select class="form-control" id="bank_id_{{ $pmthod->id }}"><option value="">Select Bank</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select>@endif</td></tr> @endforeach<tr><th style="font-size: 15px;" colspan="2">Total</th><th class="text-right" id="total_split" style="font-size: 26px;">0.00</th></tr></table></div>')
+                        $("#more_info_appender").html('<div id="split_method"> <br/><h5>MULTIPLE PAYMENT METHOD</h5><table class="table table-striped"> @foreach($payments as $pmthod) @if($pmthod->id==4 && config('app.store') == "inventory") @continue @endif <tr><td style="font-size: 15px;">{{ ucwords($pmthod->name) }}</td><td class="text-right" align="right"><input value="0" step="0.00001" required class="form-control pull-right split_control" style="width: 100px;" type="number" data-key="{{ $pmthod->id }}" name="split_method[{{ $pmthod->id }}]"</td><td>@if($pmthod->id != 4 && $pmthod->id!=1)<select class="form-control" id="bank_id_{{ $pmthod->id }}"><option value="">Select Bank</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select>@endif</td></tr> @endforeach<tr><th style="font-size: 15px;" colspan="2">Total</th><th class="text-right" id="total_split" style="font-size: 26px;">0.00</th></tr></table></div>')
                         handle_split_method();
                     }else{
                         $("#more_info_appender").html('')
@@ -880,7 +895,6 @@
             }
 
 
-
             $("#new_customer_form").on("submit",function(){
                 var form__ = $(this);
                 $('#error_reg').html("").attr('style','display: none');
@@ -900,8 +914,8 @@
                     form__.find(".form-control").removeAttr('disabled');
                     form__.removeAttr('style');
                     if(response.status === true){
-                       var newCustomer = new Option(response.value,response.id,true,true);
-                       $('#customer_id').append(newCustomer).trigger('change');
+                        var newCustomer = new Option(response.value,response.id,true,true);
+                        $('#customer_id').append(newCustomer).trigger('change');
                         $('#newCustomer').modal('hide');
                         form__.find(".form-control").val('');
                         form__.find(".form-control").html('');
@@ -931,7 +945,6 @@
                 });
                 return false;
             });
-
 
         });
 
