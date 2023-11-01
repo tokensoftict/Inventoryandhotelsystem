@@ -18,19 +18,16 @@ class HomeController extends Controller
     }
 
 
-    public function index()
-    {
-        if (auth()->check())   return redirect()->route('dashboard');
+    public function index(){
+        if(auth()->check())   return redirect()->route('dashboard');
         return view('login');
     }
 
-    public function process_login(Request $request)
-    {
+    public function process_login(Request $request){
         $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
-
 
         $credentials = $request->except(['_token']);
 
@@ -45,8 +42,7 @@ class HomeController extends Controller
     }
 
 
-    public function logout()
-    {
+    public function logout(){
         auth()->logout();
         return redirect()->route('home');
     }
@@ -54,26 +50,30 @@ class HomeController extends Controller
 
     public function myprofile(Request $request)
     {
-        if (!auth()->check())   return redirect()->route('home');
+        if(!auth()->check())   return redirect()->route('home');
 
         $data['title'] = "My Profile";
 
         $data['user'] = auth()->user();
 
-        if ($request->method() == "POST") {
+        if($request->method() == "POST")
+        {
             $user = $request->only(User::$profile_fields);
 
-            if (!empty($user['password'])) {
+            if(!empty($user['password']))
+            {
                 $user['password'] = bcrypt($user['password']);
-            } else {
+            }else
+            {
                 unset($user['password']);
             }
 
             $data['user']->update($user);
 
-            return redirect()->route('myprofile')->with('success', 'Profile has been updated successfully!');
+            return redirect()->route('myprofile')->with('success','Profile has been updated successfully!');
         }
 
-        return setPageContent('myprofile', $data);
+        return setPageContent('myprofile',$data);
     }
+
 }

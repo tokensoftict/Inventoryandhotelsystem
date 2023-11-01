@@ -75,7 +75,7 @@
                                     @endif
                                     <div class="form-group">
                                         <label>Expenses Type<span  style="color:red;">*</span></label>
-                                        <select required class="form-control" name="expenses_type_id">
+                                        <select required class="form-control select2"  name="expenses_type_id">
                                             <option value="">-Select Type-</option>
                                             @foreach($expenses_types as $type)
                                                 <option {{ old('expenses_type_id',$expenses->expenses_type_id) ? 'selected' : '' }} value="{{ $type->id }}">{{ $type->name }}</option>
@@ -117,4 +117,7 @@
     <script data-turbolinks-eval="false" data-turbo-eval="false"  src="{{ asset('bower_components/datatables-scroller/js/dataTables.scroller.js') }}"></script>
     <script src="{{ asset('assets/js/init-datatables.js') }}"></script>
     <script  src="{{ asset('assets/js/init-datepicker.js') }}"></script>
+    <script>
+        $(".select2").select2();
+    </script>
 @endpush

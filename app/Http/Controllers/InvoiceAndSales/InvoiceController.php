@@ -37,6 +37,7 @@ class InvoiceController extends Controller
         $data['customers'] = Customer::all();
         $data['payments'] = PaymentMethod::all();
         $data['banks'] = BankAccount::where('status',1)->get();
+        $data['price_settings'] = $this->settings->store()->price_settings;
         return setPageContent('invoice.new-invoice',$data);
     }
 

@@ -28,7 +28,7 @@
                         @elseif(session('error'))
                             {!! alert_error(session('error')) !!}
                         @endif
-                            <table class="table {{ config('app.store') == "inventory" ? "" : 'convert-data-table' }} table-bordered table-responsive table-striped" style="font-size: 12px">
+                        <table class="table {{ config('app.store') == "inventory" ? "" : 'convert-data-table' }} table-bordered table-responsive table-striped" style="font-size: 12px">
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -38,8 +38,14 @@
                                 <th>Manufacturer</th>
                                 <th>Selling Price</th>
                                 <th>Cost Price</th>
-                                <th>Yard Selling Price</th>
-                                <th>Yard Cost Price</th>
+                                @if(config('app.store') === "hotel")
+                                    <th>Vip Price</th>
+                                    <th>VVIP Price</th>
+                                    <th>Executive Price</th>
+                                @else
+                                    <th>Yard Selling Price</th>
+                                    <th>Yard Cost Price</th>
+                                @endif
                                 <th>Last Updated</th>
                                 <th>Action</th>
                             </tr>
@@ -54,8 +60,14 @@
                                     <td>{{ $stock->manufacturer ?  $stock->manufacturer->name : "No Manufacturer" }}</td>
                                     <td>{{ number_format($stock->selling_price,2) }}</td>
                                     <td>{{ number_format($stock->cost_price,2) }}</td>
-                                    <td>{{ number_format($stock->yard_selling_price,2) }}</td>
-                                    <td>{{ number_format($stock->yard_cost_price,2) }}</td>
+                                    @if(config('app.store') === "hotel")
+                                        <td>{{ number_format($stock->vip_selling_price,2) }}</td>
+                                        <td>{{ number_format($stock->vvip_selling_price,2) }}</td>
+                                        <td>{{ number_format($stock->executive_selling_price,2) }}</td>
+                                    @else
+                                        <td>{{ number_format($stock->yard_selling_price,2) }}</td>
+                                        <td>{{ number_format($stock->yard_cost_price,2) }}</td>
+                                    @endif
                                     <td>{{ $stock->last_updated ? $stock->last_updated->name  : ""}}</td>
                                     <td>
                                         <div class="btn-group">
@@ -65,11 +77,11 @@
                                                     <li><a href="{{ route('stock.edit',$stock->id) }}">Edit</a></li>
                                                 @endif
                                                 @if(userCanView('stock.toggle'))
-                                                        <li><a href="{{ route('stock.toggle',$stock->id) }}">{{ $stock->status == 0 ? 'Enabled' : 'Disabled' }}</a></li>
+                                                    <li><a href="{{ route('stock.toggle',$stock->id) }}">{{ $stock->status == 0 ? 'Enabled' : 'Disabled' }}</a></li>
                                                 @endif
-                                                    @if(userCanView('stock.stock_report'))
-                                                        <li><a href="{{ route('stock.stock_report',$stock->id) }}">Product Report</a></li>
-                                                    @endif
+                                                @if(userCanView('stock.stock_report'))
+                                                    <li><a href="{{ route('stock.stock_report',$stock->id) }}">Product Report</a></li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </td>
@@ -77,9 +89,9 @@
                             @endforeach
                             </tbody>
                         </table>
-                            @if(config('app.store') == "inventory")
-                                 {!! $stocks->links() !!}
-                            @endif
+                        @if(config('app.store') == "inventory")
+                            {!! $stocks->links() !!}
+                        @endif
                     </div>
                 </section>
             </div>

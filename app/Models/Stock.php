@@ -78,7 +78,9 @@ class Stock extends Model
         'expiry',
         'status',
         'user_id',
-        'last_updated_by'
+        'last_updated_by',
+        'vvip_selling_price',
+        'executive_selling_price'
     ];
 
     public static $validation = [
@@ -107,7 +109,9 @@ class Stock extends Model
         'expiry',
         'status',
         'user_id',
-        'last_updated_by'
+        'last_updated_by',
+        'vvip_selling_price',
+        'executive_selling_price'
     ];
     protected $appends = ['available_quantity','available_yard_quantity'];
 

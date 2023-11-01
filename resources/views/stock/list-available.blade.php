@@ -40,7 +40,9 @@
                                 <th>Yard Cost Price</th>
                                 @endif
                                 @if(config('app.store') == "hotel")
-                                 <th>VIP Selling Price</th>
+                                    <th>Vip Price</th>
+                                    <th>VVIP Price</th>
+                                    <th>Executive Price</th>
                                 @endif
                                 <th>Action</th>
                             </tr>
@@ -63,6 +65,8 @@
                                     @endif
                                     @if(config('app.store') == "hotel")
                                         <td>{{ number_format($batch->stock->vip_selling_price,2) }}</td>
+                                        <td>{{ number_format($batch->stock->vvip_selling_price,2) }}</td>
+                                        <td>{{ number_format($batch->stock->executive_selling_price,2) }}</td>
                                     @endif
 
                                     <td>

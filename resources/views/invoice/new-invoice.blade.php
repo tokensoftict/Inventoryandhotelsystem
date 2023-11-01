@@ -234,19 +234,19 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                 @endif
+                                                @endif
 
                                                 <input type="hidden"  id="customer_id" name="customer" value="{{ auth()->user()->customer_id }}"/>
-                                             @else
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Customer Name</label>
-                                                <select class="form-control  select-customer"  name="customer" id="customer_id">
-                                                    @foreach($customers as $customer)
-                                                        <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <a href="#" data-toggle="modal" data-target="#newCustomer" class="text-success" style="display: block;text-align: center">Add New Customer</a>
-                                            </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">Customer Name</label>
+                                                    <select class="form-control  select-customer"  name="customer" id="customer_id">
+                                                        @foreach($customers as $customer)
+                                                            <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <a href="#" data-toggle="modal" data-target="#newCustomer" class="text-success" style="display: block;text-align: center">Add New Customer</a>
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
@@ -302,46 +302,46 @@
     </div>
     @if(userCanView('customer.store'))
         <div class="modal fade" id="newCustomer" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">New Customer</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger" id="error_reg" style="display: none;"></div>
-                    <form id="new_customer_form" action="{{ route('customer.store') }}?ajax=true"  enctype="multipart/form-data" method="post">
-                        {{ csrf_field() }}
-                        <div class="form-group">
-                            <label>First Name</label>
-                            <input type="text"  required  class="form-control" name="firstname" placeholder="First Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Last Name</label>
-                            <input type="text"  required  class="form-control" name="lastname" placeholder="Last Name"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="text"    class="form-control" name="email" placeholder="Email Address"/>
-                        </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">New Customer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" id="error_reg" style="display: none;"></div>
+                        <form id="new_customer_form" action="{{ route('customer.store') }}?ajax=true"  enctype="multipart/form-data" method="post">
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text"  required  class="form-control" name="firstname" placeholder="First Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text"  required  class="form-control" name="lastname" placeholder="Last Name"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text"    class="form-control" name="email" placeholder="Email Address"/>
+                            </div>
 
-                        <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="text" required  class="form-control" name="phone_number" placeholder="Phone Number"/>
-                        </div>
-                        <div class="form-group">
-                            <label>Address</label>
-                            <textarea class="form-control" placeholder="Address" name="address"></textarea>
-                        </div>
-                        <div>
-                            <button type="submit" id="add_customer" class="btn btn-success btn-sm">Add Customer</button>
-                        </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="text" required  class="form-control" name="phone_number" placeholder="Phone Number"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea class="form-control" placeholder="Address" name="address"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" id="add_customer" class="btn btn-success btn-sm">Add Customer</button>
+                            </div>
 
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     @endif
 @endsection
 
@@ -528,10 +528,24 @@
                 if (day.length == 1) {
                     day = "0" + day;
                 }
-9                return year + "-" + month + "-" + day;
+                return year + "-" + month + "-" + day;
             }
         })();
 
+
+        function getDefaultPrice(data){
+
+            @if($price_settings->selling_price === true)
+                return data.stock.selling_price;
+            @elseif($price_settings->vip_selling_price === true)
+                return data.stock.vip_selling_price;
+            @elseif($price_settings->vvip_selling_price === true)
+                return data.stock.vvip_selling_price;
+            @elseif($price_settings->executive_selling_price === true)
+                return data.stock.executive_selling_price;
+            @endif
+
+        }
 
 
         function cartTemplate(data){
@@ -547,13 +561,27 @@
                 }
                 @endif
 
-                        @if(config('app.store') == "hotel")
+                    @if(config('app.store') == "hotel")
+                    @if($price_settings->selling_price === true)
                 if(parseInt(data.stock.available_quantity) > 0) {
                     type_select += '<option selected value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.selling_price+'" data-av-qty="'+data.stock.available_quantity+'">NORMAL PRICE</option>';
                 }
+                @endif
+                    @if($price_settings->vip_selling_price === true)
                 if(parseInt(data.stock.vip_selling_price) > 0) {
                     type_select += '<option  value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.vip_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">VIP PRICE</option>';
                 }
+                @endif
+                    @if($price_settings->vvip_selling_price === true)
+                if(parseInt(data.stock.vvip_selling_price) > 0) {
+                    type_select += '<option  value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.vvip_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">VVIP PRICE</option>';
+                }
+                @endif
+                    @if($price_settings->executive_selling_price === true)
+                if(parseInt(data.stock.executive_selling_price) > 0) {
+                    type_select += '<option  value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.executive_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">EXECUTIVE PRICE</option>';
+                }
+                @endif
                 @endif
 
                     type_select +='</select>';
@@ -568,7 +596,7 @@
                 data.stock.selling_price = data.stock.yard_selling_price
             }
 
-            return '<tr style="cursor: pointer" id="product_'+data.stock.id+'"><th  class="text-center"><input data-image="'+data.stock.image+'" name="picture" class="picture" value="1" type="radio"></th><th>'+data.stock.name+'<div id="error_'+data.stock.id+'" class="errors alert alert-danger" '+(data['error'] ? '' : 'style="display:none;"')+'>'+(data['error'] ? data['error'] : '')+'</div>'+'</th><td><div class="col-md-4"><div class="input-group"> <span class="input-group-btn input-group-sm"> <button  data-field="quant[1]" type="button" class="btn btn-danger btn-number minus" data-type="minus"> <i class="fa fa-minus"></i></button></span><input class="form-control text-center input-number"  data-id="'+data.stock.id+'" data-price="'+data.stock.selling_price+'" style="width:100px;display: block;" required="" max="'+data.stock.available_quantity+'" min="1" type="number" value="1"> <span class="input-group-btn"> <button type="button" class="btn btn-primary btn-number plus" data-type="plus"><i class="fa fa-plus"></i> </button> </span></div></div><td>'+type_select+'</td><th class="text-right item_price">@if(config('app.store')=="inventory")<input type="text" step="0.00000001" class="item_text_price form-control" value="'+data.stock.selling_price+'"/>@else'+formatMoney(data.stock.selling_price)+'  @endif</th><th class="text-right item_total">'+formatMoney(data.stock.selling_price)+'</th><td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td></tr>';
+            return '<tr style="cursor: pointer" id="product_'+data.stock.id+'"><th  class="text-center"><input data-image="'+data.stock.image+'" name="picture" class="picture" value="1" type="radio"></th><th>'+data.stock.name+'<div id="error_'+data.stock.id+'" class="errors alert alert-danger" '+(data['error'] ? '' : 'style="display:none;"')+'>'+(data['error'] ? data['error'] : '')+'</div>'+'</th><td><div class="col-md-4"><div class="input-group"> <span class="input-group-btn input-group-sm"> <button  data-field="quant[1]" type="button" class="btn btn-danger btn-number minus" data-type="minus"> <i class="fa fa-minus"></i></button></span><input class="form-control text-center input-number"  data-id="'+data.stock.id+'" data-price="'+getDefaultPrice(data)+'" style="width:100px;display: block;" required="" max="'+data.stock.available_quantity+'" min="1" type="number" value="1"> <span class="input-group-btn"> <button type="button" class="btn btn-primary btn-number plus" data-type="plus"><i class="fa fa-plus"></i> </button> </span></div></div><td>'+type_select+'</td><th class="text-right item_price">@if(config('app.store')=="inventory")<input type="text" step="0.00000001" class="item_text_price form-control" value="'+getDefaultPrice(data)+'"/>@else'+formatMoney(getDefaultPrice(data))+'  @endif</th><th class="text-right item_total">'+formatMoney(getDefaultPrice(data))+'</th><td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td></tr>';
         }
 
         function ProcessInvoice(btn){
@@ -585,7 +613,7 @@
                 alert('Please enter Invoice / Receipt No from the manual invoice');
                 return false;
             }
-                    @endif
+            @endif
 
             let payment_payment = false;
 
@@ -598,7 +626,7 @@
                 if(payment_payment == false) return ;
 
             }
-            
+
 
 
             if(!document.getElementById('customer_id')){
@@ -730,25 +758,25 @@
 
                     @if(config('app.store') == "hotel")
 
-                        if($(this).attr('data-key') == "4" &&  parseFloat($(this).val()) > 0 && $('#customer_id').val() === "1"){
-                            alert("You can not sell credit to a Generic Customer, Please select real customer");
-                            error = true;
-                            return false;
-                        }
+                    if($(this).attr('data-key') == "4" &&  parseFloat($(this).val()) > 0 && $('#customer_id').val() === "1"){
+                        alert("You can not sell credit to a Generic Customer, Please select real customer");
+                        error = true;
+                        return false;
+                    }
 
                     @elseif(config('app.store') == "inventory")
 
-                        if(getTotalSplitPayemnt() !== calculateTotal() && $('#customer_id').val() === "1")
-                        {
-                            alert("You can not sell credit to a Generic Customer, Please select real customer");
-                            error = true;
-                            return false;
-                        }
+                    if(getTotalSplitPayemnt() !== calculateTotal() && $('#customer_id').val() === "1")
+                    {
+                        alert("You can not sell credit to a Generic Customer, Please select real customer");
+                        error = true;
+                        return false;
+                    }
 
                     @endif
 
 
-                    data[$(this).attr('data-key')] = $(this).val();
+                        data[$(this).attr('data-key')] = $(this).val();
 
                     payment_info_data[$(this).attr('data-key')] = {};
 
@@ -900,8 +928,8 @@
                     form__.find(".form-control").removeAttr('disabled');
                     form__.removeAttr('style');
                     if(response.status === true){
-                       var newCustomer = new Option(response.value,response.id,true,true);
-                       $('#customer_id').append(newCustomer).trigger('change');
+                        var newCustomer = new Option(response.value,response.id,true,true);
+                        $('#customer_id').append(newCustomer).trigger('change');
                         $('#newCustomer').modal('hide');
                         form__.find(".form-control").val('');
                         form__.find(".form-control").html('');
