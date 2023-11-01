@@ -7,7 +7,7 @@
                 <div class="navbar-header">
                     <a href="index.html" class="navbar-brand">
                         <span class="logo" style="font-size: 22px;font-weight: bolder">
-                            {{-- {{ getStoreSettings()->name }} --}}
+                             {{ getStoreSettings()->name }}
                         </span>
                     </a>
                 </div>

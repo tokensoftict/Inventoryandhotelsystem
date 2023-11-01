@@ -54,7 +54,6 @@ class TaskGenerate extends Command
             'CustomerManager'=>'Customer Manager',
             'StockManager'=>"Stock Manager",
             'InvoiceAndSales'=>"Invoice & Sales",
-            'TableInvoice' => "Table Invoice",
             'PurchaseOrders'=>"Purchase Orders",
             'PurchaseReport'=>"Supplier/Purchase Order",
             'InvoiceReport'=>"Invoice Reports",

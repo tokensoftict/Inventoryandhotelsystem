@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{-- <title>{{ getStoreSettings()->name }}</title> --}}
+    <title>{{ getStoreSettings()->name }}</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" data-turbolinks-track="reload">
     <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('bower_components/font-awesome/css/font-awesome.min.css') }}">
