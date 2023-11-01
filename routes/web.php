@@ -160,6 +160,19 @@ Route::middleware(['auth'])->group(function () {
 
             }
 
+            Route::prefix('customer_table')->as('customer_table.')->group(function () {
+                Route::get('', ['as' => 'index', 'uses' => 'CustomerTableController@index', 'visible' => true]);
+                Route::get('list', ['as' => 'list', 'uses' => 'CustomerTableController@listAll']);
+                Route::get('create', ['as' => 'create', 'uses' => 'CustomerTableController@create']);
+                Route::post('', ['as' => 'store', 'uses' => 'CustomerTableController@store']);
+                Route::get('{id}', ['as' => 'show', 'uses' => 'CustomerTableController@show']);
+                Route::get('{id}/edit', ['as' => 'edit', 'uses' => 'CustomerTableController@edit']);
+                Route::get('{id}/toggle', ['as' => 'toggle', 'uses' => 'CustomerTableController@toggle']);
+                Route::put('{id}', ['as' => 'update', 'uses' => 'CustomerTableController@update']);
+                Route::delete('{id}', ['as' => 'destroy', 'uses' => 'CustomerTableController@destroy']);
+            });
+
+
             Route::prefix('warehouse_and_shop')->as('warehouse_and_shop.')->group(function () {
                 Route::get('', ['as' => 'index', 'uses' => 'WarehouseAndShopController@index', 'visible' => true]);
                 Route::get('list', ['as' => 'list', 'uses' => 'WarehouseAndShopController@listAll']);
@@ -259,6 +272,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('create', ['as' => 'create', 'uses' => 'InvoiceController@create']);
                 Route::get('draft', ['as' => 'draft', 'uses' => 'InvoiceController@draft', 'visible' => true]);
                 Route::get('paid', ['as' => 'paid', 'uses' => 'InvoiceController@paid', 'visible' => true]);
+
                 Route::get('{id}/pos_print', ['as' => 'pos_print', 'uses' => 'InvoiceController@print_pos' ]);
                 Route::get('{id}/print_afour', ['as' => 'print_afour', 'uses' => 'InvoiceController@print_afour']);
                 Route::get('{id}/print_way_bill', ['as' => 'print_way_bill', 'uses' => 'InvoiceController@print_way_bill']);
@@ -272,6 +286,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('draft_invoice', ['as' => 'draft_invoice', 'uses' => 'InvoiceController@draft_invoice','custom_label'=>'Save Invoice to Draft']);
                 Route::get('complete_invoice', ['as' => 'complete_invoice', 'uses' => 'InvoiceController@complete_invoice','custom_label'=>'Save Invoice to Complete']);
                 Route::post('{id}/complete_invoice_no_edit', ['as' => 'complete_invoice_no_edit', 'uses' => 'InvoiceController@complete_invoice_no_edit','custom_label'=>'Complete / Pay Invoice from view invoice page']);
+
+
+                Route::match(['get', 'post'],'table', ['as' => 'table', 'uses' => 'InvoiceController@table_invoice', 'visible' => true, 'custom_label'=>'Table & Invoice List']);
+                Route::get('{id}/print_table_pos', ['as' => 'print_table_pos', 'uses' => 'InvoiceController@print_table_pos','custom_label'=>'Print Table Invoice']);
+                Route::match(['get', 'post'],'{id}/pay_table_invoice', ['as' => 'pay_table_invoice', 'uses' => 'InvoiceController@pay_table_invoice', 'custom_label'=>'Pay & Complete Table Invoice']);
+
             });
 
             Route::prefix('cashbook')->as('cashbook.')->group(function () {

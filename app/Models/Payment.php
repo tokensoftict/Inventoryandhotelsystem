@@ -16,6 +16,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * Class Payment
  *
  * @property int $id
+ * @property int|null $customer_table_id
  * @property int|null $user_id
  * @property int|null $customer_id
  * @property string $invoice_number
@@ -47,7 +48,8 @@ class Payment extends Model
         'warehousestore_id' => 'int',
         'invoice_id' => 'int',
         'subtotal' => 'float',
-        'total_paid' => 'float'
+        'total_paid' => 'float',
+        'customer_table_id' => 'int'
     ];
 
     protected $dates = [
@@ -66,12 +68,18 @@ class Payment extends Model
         'subtotal',
         'total_paid',
         'payment_time',
-        'payment_date'
+        'payment_date',
+        'customer_table_id'
     ];
 
     public function warehousestore()
     {
         return $this->belongsTo(Warehousestore::class);
+    }
+
+    public function customer_table()
+    {
+        return $this->belongsTo(CustomerTable::class);
     }
 
     public function customer()
@@ -111,6 +119,7 @@ class Payment extends Model
             'invoice_number' => $paymentInformation['invoice']->invoice_number,
             'invoice_id' => $paymentInformation['invoice']->id,
             'invoice_type'=>$invoiceType,
+            'customer_table_id' => (isset($paymentInformation['invoice']->customer_table_id) ? $paymentInformation['invoice']->customer_table_id : NULL),
             'department' => auth()->user()->department,
             'warehousestore_id' => getActiveStore()->id,
             'subtotal' => $paymentInformation['invoice']->sub_total,

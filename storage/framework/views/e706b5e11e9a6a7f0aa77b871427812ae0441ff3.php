@@ -1,8 +1,6 @@
-@extends('layouts.app')
-
-@push('css')
-    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css') }}">
+<?php $__env->startPush('css'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('bower_components/select2/dist/css/select2.min.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css')); ?>">
     <style>
 
         input {
@@ -80,7 +78,7 @@
             animation: spin 0.5s ease-in-out infinite;
             -webkit-animation: spin 0.5s ease-in-out infinite;
         }
-        @keyframes spin {
+        @keyframes  spin {
             to {
                 -webkit-transform: rotate(360deg);
             }
@@ -133,9 +131,9 @@
             text-decoration: underline;
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <div class="ui-container">
         <form id="mainform">
@@ -158,7 +156,7 @@
                                             <th></th>
                                             <th style="width: 25%;">Name</th>
                                             <th>Quantity</th>
-                                            <th style="width: 15%;">{{ config('app.store') == "inventory" ? "Type" : "Price Type" }}</th>
+                                            <th style="width: 15%;"><?php echo e(config('app.store') == "inventory" ? "Type" : "Price Type"); ?></th>
                                             <th style="width: 15%;">Price</th>
                                             <th>Total</th>
                                             <th>Action</th>
@@ -192,18 +190,18 @@
                             </section>
                         </div>
                         <div class="col-sm-4">
-                            @if(userCanView('invoiceandsales.create'))
+                            <?php if(userCanView('invoiceandsales.create')): ?>
                                 <section class="panel">
                                     <section class="panel-body panel-border text-center">
-                                        @if(userCanView('invoiceandsales.draft_invoice'))
+                                        <?php if(userCanView('invoiceandsales.draft_invoice')): ?>
                                             <button type="button"  data-status="DRAFT" class="btn btn-success btn-lg" onclick="return ProcessInvoice(this);">Save Draft</button>
-                                        @endif
-                                        @if(userCanView('invoiceandsales.complete_invoice'))
+                                        <?php endif; ?>
+                                        <?php if(userCanView('invoiceandsales.complete_invoice')): ?>
                                             <button type="button"  data-status="COMPLETE" class="btn btn-primary btn-lg" onclick="return ProcessInvoice(this);">Complete Invoice</button>
-                                        @endif
+                                        <?php endif; ?>
                                     </section>
                                 </section>
-                            @endif
+                            <?php endif; ?>
                             <section class="panel">
                                 <header class="panel-heading panel-border total_invoice text-center" style="font-size: 25px">0.00</header>
                             </section>
@@ -217,42 +215,42 @@
                                             -->
                                             <div class="form-group">
                                                 <label for="invoice_date">Invoice / Sales date</label>
-                                                <input readonly  id="invoice_date" class="form-control" value="{{ date('Y-m-d') }}"  placeholder="Invoice / Sales date" type="text">
+                                                <input readonly  id="invoice_date" class="form-control" value="<?php echo e(date('Y-m-d')); ?>"  placeholder="Invoice / Sales date" type="text">
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
-                                            @if(config('app.store') == "hotel")
-                                                @if(auth()->user()->customer_id != "0")
+                                            <?php if(config('app.store') == "hotel"): ?>
+                                                <?php if(auth()->user()->customer_id != "0"): ?>
                                                     <h6>Customer : </h6>
-                                                    <h6><b>{{ auth()->user()->name }}</b></h6>
-                                                @else
+                                                    <h6><b><?php echo e(auth()->user()->name); ?></b></h6>
+                                                <?php else: ?>
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1">Customer Name</label>
                                                         <select class="form-control  select-customer"  name="customer" id="customer_id">
-                                                            @foreach($customers as $customer)
-                                                                <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
-                                                            @endforeach
+                                                            <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                <option value="<?php echo e($customer->id); ?>"><?php echo e($customer->firstname); ?> <?php echo e($customer->lastname); ?></option>
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </select>
                                                     </div>
-                                                @endif
+                                                <?php endif; ?>
 
-                                                <input type="hidden"  id="customer_id" name="customer" value="{{ auth()->user()->customer_id }}"/>
-                                            @else
+                                                <input type="hidden"  id="customer_id" name="customer" value="<?php echo e(auth()->user()->customer_id); ?>"/>
+                                            <?php else: ?>
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1">Customer Name</label>
                                                     <select class="form-control  select-customer"  name="customer" id="customer_id">
-                                                        @foreach($customers as $customer)
-                                                            <option value="{{ $customer->id }}">{{ $customer->firstname }} {{ $customer->lastname }}</option>
-                                                        @endforeach
+                                                        <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <option value="<?php echo e($customer->id); ?>"><?php echo e($customer->firstname); ?> <?php echo e($customer->lastname); ?></option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     </select>
                                                     <a href="#" data-toggle="modal" data-target="#newCustomer" class="text-success" style="display: block;text-align: center">Add New Customer</a>
                                                 </div>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-6" style="margin-top: 0px">
-                                            <img id="imageThumb" src="{{ asset('assets/products.jpg') }}" class="img-thumbnail">
+                                            <img id="imageThumb" src="<?php echo e(asset('assets/products.jpg')); ?>" class="img-thumbnail">
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group">
@@ -264,9 +262,9 @@
                                                 <label for="exampleInputEmail1">Select Table</label>
                                                 <select class="form-control  select-table"  name="select_table" id="select_table">
                                                     <option>-Select Table-</option>
-                                                    @foreach($tables as $table)
-                                                        <option value="{{ $table->id }}">{{ $table->department }} - {{ $table->name }}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $tables; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $table): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($table->id); ?>"><?php echo e($table->department); ?> - <?php echo e($table->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
 
@@ -281,9 +279,9 @@
                                         <label for="exampleInputEmail1">Payment Method</label>
                                         <select class="form-control" name="payment_method" id="payment_method">
                                             <option value="">Select Payment Method</option>
-                                            @foreach($payments as $payment)
-                                                <option  data-label="{{ strtolower( $payment->name) }}"  value="{{  $payment->id }}">{{  $payment->name }}</option>
-                                            @endforeach
+                                            <?php $__currentLoopData = $payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option  data-label="<?php echo e(strtolower( $payment->name)); ?>"  value="<?php echo e($payment->id); ?>"><?php echo e($payment->name); ?></option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             <option  data-label="split_method"  value="split_method">MULTIPLE PAYMENT METHOD</option>
                                         </select>
                                     </div>
@@ -311,7 +309,7 @@
             </div>
         </div>
     </div>
-    @if(userCanView('customer.store'))
+    <?php if(userCanView('customer.store')): ?>
         <div class="modal fade" id="newCustomer" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -321,8 +319,9 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger" id="error_reg" style="display: none;"></div>
-                        <form id="new_customer_form" action="{{ route('customer.store') }}?ajax=true"  enctype="multipart/form-data" method="post">
-                            {{ csrf_field() }}
+                        <form id="new_customer_form" action="<?php echo e(route('customer.store')); ?>?ajax=true"  enctype="multipart/form-data" method="post">
+                            <?php echo e(csrf_field()); ?>
+
                             <div class="form-group">
                                 <label>First Name</label>
                                 <input type="text"  required  class="form-control" name="firstname" placeholder="First Name"/>
@@ -353,19 +352,19 @@
                 </div>
             </div>
         </div>
-    @endif
-@endsection
+    <?php endif; ?>
+<?php $__env->stopSection(); ?>
 
 
-@push('js')
+<?php $__env->startPush('js'); ?>
     <script>
-        productfindurl = "{{ route('findstock') }}"
+        productfindurl = "<?php echo e(route('findstock')); ?>"
     </script>
-    <script data-turbolinks-eval="false" data-turbo-eval="false" src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
-    <script data-turbolinks-eval="false" data-turbo-eval="false" src="{{ asset('assets/js/init-select2.js') }}"></script>
-    <script data-turbolinks-eval="false" data-turbo-eval="false" src="{{ asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
-    <script  src="{{ asset('assets/js/init-datepicker.js') }}"></script>
-    <script  type='text/javascript' src="{{asset('assets/js/autocomplete.js?v='.mt_rand())}}"></script>
+    <script data-turbolinks-eval="false" data-turbo-eval="false" src="<?php echo e(asset('bower_components/select2/dist/js/select2.min.js')); ?>"></script>
+    <script data-turbolinks-eval="false" data-turbo-eval="false" src="<?php echo e(asset('assets/js/init-select2.js')); ?>"></script>
+    <script data-turbolinks-eval="false" data-turbo-eval="false" src="<?php echo e(asset('bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')); ?>"></script>
+    <script  src="<?php echo e(asset('assets/js/init-datepicker.js')); ?>"></script>
+    <script  type='text/javascript' src="<?php echo e(asset('assets/js/autocomplete.js?v='.mt_rand())); ?>"></script>
 
 
     <script>
@@ -401,17 +400,17 @@
             $('.product_type').on('change',function(){
                 const price = $(this).parent().parent().find('.input-number');
                 const td_price = $(this).parent().parent().find('.item_price');
-                @if(config('app.store') == "hotel")
+                <?php if(config('app.store') == "hotel"): ?>
                 price.attr('max',$('option:selected', this).attr('data-av-qty'));
                 price.attr('data-price',$('option:selected', this).attr('data-price'));
                 td_price.html(formatMoney($('option:selected', this).attr('data-price')));
-                @else
+                <?php else: ?>
                 price.attr('max',$('option:selected', this).attr('data-av-qty'));
                 price.attr('data-price',$('option:selected', this).attr('data-price'));
                 td_price.html('<input type="text" step="0.00000001" class="item_text_price form-control" value="'+$('option:selected', this).attr('data-price')+'"/>')
                 bindproductType();
                 bindIncrement();
-                @endif
+                <?php endif; ?>
                 calculateTotal();
             });
         }
@@ -546,15 +545,15 @@
 
         function getDefaultPrice(data){
 
-            @if($price_settings->selling_price === true)
+            <?php if($price_settings->selling_price === true): ?>
                 return data.stock.selling_price;
-            @elseif($price_settings->vip_selling_price === true)
+            <?php elseif($price_settings->vip_selling_price === true): ?>
                 return data.stock.vip_selling_price;
-            @elseif($price_settings->vvip_selling_price === true)
+            <?php elseif($price_settings->vvip_selling_price === true): ?>
                 return data.stock.vvip_selling_price;
-            @elseif($price_settings->executive_selling_price === true)
+            <?php elseif($price_settings->executive_selling_price === true): ?>
                 return data.stock.executive_selling_price;
-            @endif
+            <?php endif; ?>
 
         }
 
@@ -563,42 +562,42 @@
             let type_select = "";
             if(data.stock.type != "Normal"){
                 type_select += '<select class="form-control product_type">';
-                @if(config('app.store') == "inventory")
+                <?php if(config('app.store') == "inventory"): ?>
                 if(parseInt(data.stock.available_quantity) > 0) {
-                    type_select += '<option selected value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.selling_price+'" data-av-qty="'+data.stock.available_quantity+'">Packed</option>';
+                    type_select += '<option selected value="<?php echo e(getActiveStore()->packed_column); ?>" data-price="'+data.stock.selling_price+'" data-av-qty="'+data.stock.available_quantity+'">Packed</option>';
                 }
                 if(parseInt(data.stock.available_yard_quantity) > 0) {
-                    type_select += '<option value="{{ getActiveStore()->yard_column }}" data-price="'+data.stock.yard_selling_price+'" data-av-qty="'+data.stock.available_yard_quantity+'">Pieces / Yards</option>';
+                    type_select += '<option value="<?php echo e(getActiveStore()->yard_column); ?>" data-price="'+data.stock.yard_selling_price+'" data-av-qty="'+data.stock.available_yard_quantity+'">Pieces / Yards</option>';
                 }
-                @endif
+                <?php endif; ?>
 
-                    @if(config('app.store') == "hotel")
-                    @if($price_settings->selling_price === true)
+                    <?php if(config('app.store') == "hotel"): ?>
+                    <?php if($price_settings->selling_price === true): ?>
                 if(parseInt(data.stock.available_quantity) > 0) {
-                    type_select += '<option selected value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.selling_price+'" data-av-qty="'+data.stock.available_quantity+'">NORMAL PRICE</option>';
+                    type_select += '<option selected value="<?php echo e(getActiveStore()->packed_column); ?>" data-price="'+data.stock.selling_price+'" data-av-qty="'+data.stock.available_quantity+'">NORMAL PRICE</option>';
                 }
-                @endif
-                    @if($price_settings->vip_selling_price === true)
+                <?php endif; ?>
+                    <?php if($price_settings->vip_selling_price === true): ?>
                 if(parseInt(data.stock.vip_selling_price) > 0) {
-                    type_select += '<option  value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.vip_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">VIP PRICE</option>';
+                    type_select += '<option  value="<?php echo e(getActiveStore()->packed_column); ?>" data-price="'+data.stock.vip_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">VIP PRICE</option>';
                 }
-                @endif
-                    @if($price_settings->vvip_selling_price === true)
+                <?php endif; ?>
+                    <?php if($price_settings->vvip_selling_price === true): ?>
                 if(parseInt(data.stock.vvip_selling_price) > 0) {
-                    type_select += '<option  value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.vvip_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">VVIP PRICE</option>';
+                    type_select += '<option  value="<?php echo e(getActiveStore()->packed_column); ?>" data-price="'+data.stock.vvip_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">VVIP PRICE</option>';
                 }
-                @endif
-                    @if($price_settings->executive_selling_price === true)
+                <?php endif; ?>
+                    <?php if($price_settings->executive_selling_price === true): ?>
                 if(parseInt(data.stock.executive_selling_price) > 0) {
-                    type_select += '<option  value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.executive_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">EXECUTIVE PRICE</option>';
+                    type_select += '<option  value="<?php echo e(getActiveStore()->packed_column); ?>" data-price="'+data.stock.executive_selling_price+'" data-av-qty="'+data.stock.available_quantity+'">EXECUTIVE PRICE</option>';
                 }
-                @endif
-                @endif
+                <?php endif; ?>
+                <?php endif; ?>
 
                     type_select +='</select>';
             }else{
                 type_select += '<select class="form-control product_type">';
-                type_select +='<option selected value="{{ getActiveStore()->packed_column }}" data-price="'+data.stock.selling_price+'" data-av-qty="'+data.stock.available_quantity+'">Packed</option>';
+                type_select +='<option selected value="<?php echo e(getActiveStore()->packed_column); ?>" data-price="'+data.stock.selling_price+'" data-av-qty="'+data.stock.available_quantity+'">Packed</option>';
                 type_select +='</select>';
             }
 
@@ -607,7 +606,7 @@
                 data.stock.selling_price = data.stock.yard_selling_price
             }
 
-            return '<tr style="cursor: pointer" id="product_'+data.stock.id+'"><th  class="text-center"><input data-image="'+data.stock.image+'" name="picture" class="picture" value="1" type="radio"></th><th>'+data.stock.name+'<div id="error_'+data.stock.id+'" class="errors alert alert-danger" '+(data['error'] ? '' : 'style="display:none;"')+'>'+(data['error'] ? data['error'] : '')+'</div>'+'</th><td><div class="col-md-4"><div class="input-group"> <span class="input-group-btn input-group-sm"> <button  data-field="quant[1]" type="button" class="btn btn-danger btn-number minus" data-type="minus"> <i class="fa fa-minus"></i></button></span><input class="form-control text-center input-number"  data-id="'+data.stock.id+'" data-price="'+getDefaultPrice(data)+'" style="width:100px;display: block;" required="" max="'+data.stock.available_quantity+'" min="1" type="number" value="1"> <span class="input-group-btn"> <button type="button" class="btn btn-primary btn-number plus" data-type="plus"><i class="fa fa-plus"></i> </button> </span></div></div><td>'+type_select+'</td><th class="text-right item_price">@if(config('app.store')=="inventory")<input type="text" step="0.00000001" class="item_text_price form-control" value="'+getDefaultPrice(data)+'"/>@else'+formatMoney(getDefaultPrice(data))+'  @endif</th><th class="text-right item_total">'+formatMoney(getDefaultPrice(data))+'</th><td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td></tr>';
+            return '<tr style="cursor: pointer" id="product_'+data.stock.id+'"><th  class="text-center"><input data-image="'+data.stock.image+'" name="picture" class="picture" value="1" type="radio"></th><th>'+data.stock.name+'<div id="error_'+data.stock.id+'" class="errors alert alert-danger" '+(data['error'] ? '' : 'style="display:none;"')+'>'+(data['error'] ? data['error'] : '')+'</div>'+'</th><td><div class="col-md-4"><div class="input-group"> <span class="input-group-btn input-group-sm"> <button  data-field="quant[1]" type="button" class="btn btn-danger btn-number minus" data-type="minus"> <i class="fa fa-minus"></i></button></span><input class="form-control text-center input-number"  data-id="'+data.stock.id+'" data-price="'+getDefaultPrice(data)+'" style="width:100px;display: block;" required="" max="'+data.stock.available_quantity+'" min="1" type="number" value="1"> <span class="input-group-btn"> <button type="button" class="btn btn-primary btn-number plus" data-type="plus"><i class="fa fa-plus"></i> </button> </span></div></div><td>'+type_select+'</td><th class="text-right item_price"><?php if(config('app.store')=="inventory"): ?><input type="text" step="0.00000001" class="item_text_price form-control" value="'+getDefaultPrice(data)+'"/><?php else: ?>'+formatMoney(getDefaultPrice(data))+'  <?php endif; ?></th><th class="text-right item_total">'+formatMoney(getDefaultPrice(data))+'</th><td class="text-right"> <a href="#" onclick="return removeItem(this);" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a></td></tr>';
         }
 
         function ProcessInvoice(btn){
@@ -619,12 +618,12 @@
                 return false;
             }
 
-            @if(config('app.store') == "inventory")
+            <?php if(config('app.store') == "inventory"): ?>
             if($('#invoice_paper_number').val() == ""){
                 alert('Please enter Invoice / Receipt No from the manual invoice');
                 return false;
             }
-            @endif
+            <?php endif; ?>
 
             let payment_payment = false;
 
@@ -660,11 +659,11 @@
                 $('.submit_btn').removeAttr('disabled');
             },30000);
             $.ajax({
-                url: '{{ route('invoiceandsales.create') }}',
+                url: '<?php echo e(route('invoiceandsales.create')); ?>',
                 method : 'POST',
                 data: {
                     'data' : JSON.stringify(stock),
-                    "_token": "{{ csrf_token() }}",
+                    "_token": "<?php echo e(csrf_token()); ?>",
                     'status': status,
                     'customer_id' :$('#customer_id').val(),
                     'date':$('#invoice_date').val(),
@@ -773,7 +772,7 @@
                 let error = false;
                 $('.split_control').each(function(){
 
-                    @if(config('app.store') == "hotel")
+                    <?php if(config('app.store') == "hotel"): ?>
 
                     if($(this).attr('data-key') == "4" &&  parseFloat($(this).val()) > 0 && $('#customer_id').val() === "1"){
                         alert("You can not sell credit to a Generic Customer, Please select real customer");
@@ -781,7 +780,7 @@
                         return false;
                     }
 
-                    @elseif(config('app.store') == "inventory")
+                    <?php elseif(config('app.store') == "inventory"): ?>
 
                     if(getTotalSplitPayemnt() !== calculateTotal() && $('#customer_id').val() === "1")
                     {
@@ -790,7 +789,7 @@
                         return false;
                     }
 
-                    @endif
+                    <?php endif; ?>
 
 
                         data[$(this).attr('data-key')] = $(this).val();
@@ -836,12 +835,12 @@
                 if( error === true){
                     return false;
                 }
-                @if(config('app.store') == "hotel")
+                <?php if(config('app.store') == "hotel"): ?>
                 if(total < calculateTotal()){
                     alert("Total Invoice amount not equal to amount paid, please check");
                     return false;
                 }
-                @endif
+                <?php endif; ?>
                     return {
                     'split_method':data,
                     'payment_method_id':$('#payment_method').val(),
@@ -872,7 +871,7 @@
                     var selected = $("#payment_method option:selected").attr("data-label");
                     selected = selected.toLowerCase();
                     if (selected === "transfer") {
-                        $("#more_info_appender").html('<div id="transfer"><div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select Bank-</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div></div>')
+                        $("#more_info_appender").html('<div id="transfer"><div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select Bank-</option> <?php $__currentLoopData = $banks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bank): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($bank->id); ?>"><?php echo e($bank->account_number); ?> - <?php echo e($bank->bank->name); ?></option> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> </select></div></div>')
                     } else if (selected === "cash") {
                         /*
                         <div class="form-group"> <label>Cash Tendered</label> <input class="form-control" type="number" step="0.00001" id="cash_tendered" name="cash_tendered" required placeholder="Cash Tendered"/></div><div class="form-group well"><center>Customer Change</center><h1 align="center" style="font-size: 55px; margin: 0; padding: 0 font-weight: bold;" id="customer_change">0.00</h1></div>
@@ -880,9 +879,9 @@
                         $("#more_info_appender").html('<div id="cash"> <br/></div>')
                         handle_cash();
                     } else if (selected === "pos") {
-                        $("#more_info_appender").html('<div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select POS Bank-</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select></div>')
+                        $("#more_info_appender").html('<div class="form-group"> <label>Bank</label> <select class="form-control" required id="bank" name="bank"><option value="">-Select POS Bank-</option> <?php $__currentLoopData = $banks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bank): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($bank->id); ?>"><?php echo e($bank->account_number); ?> - <?php echo e($bank->bank->name); ?></option> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> </select></div>')
                     } else if (selected === "split_method") {
-                        $("#more_info_appender").html('<div id="split_method"> <br/><h5>MULTIPLE PAYMENT METHOD</h5><table class="table table-striped"> @foreach($payments as $pmthod) @if($pmthod->id==4 && config('app.store') == "inventory") @continue @endif<tr><td style="font-size: 15px;">{{ ucwords($pmthod->name) }}</td><td class="text-right" align="right"><input value="0" step="0.00001" required class="form-control pull-right split_control" style="width: 100px;" type="number" data-key="{{ $pmthod->id }}" name="split_method[{{ $pmthod->id }}]"</td><td>@if($pmthod->id != 4 && $pmthod->id!=1)<select class="form-control" id="bank_id_{{ $pmthod->id }}"><option value="">Select Bank</option> @foreach($banks as $bank)<option value="{{ $bank->id }}">{{ $bank->account_number }} - {{ $bank->bank->name }}</option> @endforeach </select>@endif</td></tr> @endforeach<tr><th style="font-size: 15px;" colspan="2">Total</th><th class="text-right" id="total_split" style="font-size: 26px;">0.00</th></tr></table></div>')
+                        $("#more_info_appender").html('<div id="split_method"> <br/><h5>MULTIPLE PAYMENT METHOD</h5><table class="table table-striped"> <?php $__currentLoopData = $payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pmthod): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> <?php if($pmthod->id==4 && config('app.store') == "inventory"): ?> <?php continue; ?> <?php endif; ?><tr><td style="font-size: 15px;"><?php echo e(ucwords($pmthod->name)); ?></td><td class="text-right" align="right"><input value="0" step="0.00001" required class="form-control pull-right split_control" style="width: 100px;" type="number" data-key="<?php echo e($pmthod->id); ?>" name="split_method[<?php echo e($pmthod->id); ?>]"</td><td><?php if($pmthod->id != 4 && $pmthod->id!=1): ?><select class="form-control" id="bank_id_<?php echo e($pmthod->id); ?>"><option value="">Select Bank</option> <?php $__currentLoopData = $banks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bank): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><option value="<?php echo e($bank->id); ?>"><?php echo e($bank->account_number); ?> - <?php echo e($bank->bank->name); ?></option> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> </select><?php endif; ?></td></tr> <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><tr><th style="font-size: 15px;" colspan="2">Total</th><th class="text-right" id="total_split" style="font-size: 26px;">0.00</th></tr></table></div>')
                         handle_split_method();
                     }else{
                         $("#more_info_appender").html('')
@@ -901,7 +900,7 @@
                             $("#customer_change").html(formatMoney(change));
                         }
                     }else{
-                        $("#customer_change").html("{{ number_format(0,2) }}");
+                        $("#customer_change").html("<?php echo e(number_format(0,2)); ?>");
                     }
                 })
             }
@@ -938,7 +937,7 @@
                     data[$(elem).attr('name')]= $(elem).val();
                     _data.push($(elem).attr('name'));
                 });
-                data['_token'] = "{{ csrf_token() }}";
+                data['_token'] = "<?php echo e(csrf_token()); ?>";
                 $('#add_customer').attr("disabled","disabled");
                 $.post($(this).attr('action'),data,function(response,status){
                     $('#add_customer').removeAttr("disabled");
@@ -983,4 +982,6 @@
     </script>
 
 
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /Users/yusufolatunji/MyProject/Web/Inventoryandhotelsystem/resources/views/invoice/new-invoice.blade.php ENDPATH**/ ?>

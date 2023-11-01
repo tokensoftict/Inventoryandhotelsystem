@@ -14,6 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * Class PaymentMethodTable
  * 
  * @property int $id
+ * @property int|null $customer_table_id
  * @property int|null $user_id
  * @property int|null $customer_id
  * @property int|null $payment_id
@@ -46,7 +47,8 @@ class PaymentMethodTable extends Model
         'warehousestore_id' => 'int',
 		'payment_method_id' => 'int',
 		'invoice_id' => 'int',
-		'amount' => 'float'
+		'amount' => 'float',
+        'customer_table_id' => 'int'
 	];
 
 	protected $dates = [
@@ -64,7 +66,8 @@ class PaymentMethodTable extends Model
 		'invoice_id',
 		'payment_date',
 		'amount',
-		'payment_info'
+		'payment_info',
+        'customer_table_id'
 	];
 
     public function warehousestore()
@@ -90,6 +93,11 @@ class PaymentMethodTable extends Model
     public function invoice(){
 
         return $this->morphTo();
+    }
+
+    public function customer_table()
+    {
+        return $this->belongsTo(CustomerTable::class);
     }
 
 	public function user()

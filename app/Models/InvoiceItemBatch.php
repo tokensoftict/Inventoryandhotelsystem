@@ -14,6 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * Class InvoiceItemBatch
  * 
  * @property int $id
+ * @property int|null $customer_table_id
  * @property int $invoice_id
  * @property int $invoice_item_id
  * @property int|null $stock_id
@@ -53,7 +54,8 @@ class InvoiceItemBatch extends Model
 		'cost_price' => 'float',
 		'selling_price' => 'float',
 		'profit' => 'float',
-		'quantity' => 'int'
+		'quantity' => 'int',
+        'customer_table_id' => 'int'
 	];
 
 	protected $dates = [
@@ -75,7 +77,8 @@ class InvoiceItemBatch extends Model
 		'profit',
 		'quantity',
 		'invoice_date',
-		'sales_time'
+		'sales_time',
+        'customer_table_id'
 	];
 
     public function warehousestore()
@@ -107,4 +110,9 @@ class InvoiceItemBatch extends Model
 	{
 		return $this->belongsTo(Stockbatch::class);
 	}
+
+    public function customer_table()
+    {
+        return $this->belongsTo(CustomerTable::class);
+    }
 }

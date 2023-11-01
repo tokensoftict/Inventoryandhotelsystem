@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Enums\CustomerTableStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * Class Invoice
  *
  * @property int $id
+ * @property int|null $customer_table_id
  * @property string $invoice_number
  * @property string $invoice_paper_number
  * @property int|null $customer_id
@@ -66,7 +68,8 @@ class Invoice extends Model
         'vat_amount' => 'float',
         'created_by' => 'int',
         'last_updated_by' => 'int',
-        'voided_by' => 'int'
+        'voided_by' => 'int',
+        'customer_table_id' => 'int'
     ];
 
     protected $dates = [
@@ -100,7 +103,8 @@ class Invoice extends Model
         'sales_time',
         'void_reason',
         'date_voided',
-        'void_time'
+        'void_time',
+        'customer_table_id'
     ];
 
     public function created_by()
@@ -108,6 +112,10 @@ class Invoice extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function customer_table()
+    {
+        return $this->belongsTo(CustomerTable::class);
+    }
 
     public function warehousestore()
     {
@@ -227,9 +235,12 @@ class Invoice extends Model
         $invoice->total_profit = $totals['total_invoice_total_profit'];
         $invoice->total_cost = $totals['total_invoice_total_cost'];
         $invoice->last_updated_by = auth()->id();
-
+        $invoice->customer_table_id = $request->get('customer_table_id', null);
         $invoice->update();
 
+        if($invoice->customer_table_id !== null){
+            CustomerTable::setTableStatus($invoice->customer_table_id, CustomerTableStatus::Occupied);
+        }
 
         //create invoice items
 
@@ -411,11 +422,14 @@ class Invoice extends Model
             'last_updated_by' =>auth()->id(),
             'invoice_date' =>  $request->get('date'),
             'sales_time' =>Carbon::now()->toTimeString(),
+            'customer_table_id' => $request->get('customer_table_id', null)
         ];
 
         $invoice = Invoice::create($invoice_data);
 
-
+        if($invoice->customer_table_id !== null){
+            CustomerTable::setTableStatus($invoice->customer_table_id, CustomerTableStatus::Occupied);
+        }
         //create invoice items
 
         $invoice_items_data = self::prepareInvoiceItemData(
@@ -553,6 +567,7 @@ class Invoice extends Model
                 'total_profit'=>($invoice->sub_total < 0 ? -$total_profit : $total_profit),
                 'discount_type'=>'none',
                 'discount_amount'=>0,
+                'customer_table_id' => $invoice->customer_table_id
             ]);
 
 
@@ -625,6 +640,7 @@ class Invoice extends Model
                     'invoice_date' => $invoice_date,
                     'sales_time' =>$sales_time,
                     'customer_id' =>$customer_id,
+                    'customer_table_id' => $invoice->customer_table_id
                 ]);
             }
 

@@ -80,7 +80,7 @@ $.widget("ui.autocomplete", $.ui.autocomplete, {
             .data('ui-autocomplete')._renderItem = function(ul, item) {
             return $('<li></li>')
                 .data("item.autocomplete", item)
-                .append('<a>' + item['stock']['name'] + '</a>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 10px;color:blue">Selling Price : &#x20A6; '+formatMoney(item.stock.yard_selling_price)+'&nbsp;&nbsp;&nbsp;</span><span style="font-size: 10px;color:green">Yard Selling Price : &#x20A6;'+formatMoney(item.stock.selling_price)+'</span>'+'</span>&nbsp;&nbsp;&nbsp;<span  style="font-size: 10px;color:red">Available Packed Qty :'+item.stock.available_quantity+'</span>&nbsp;&nbsp;&nbsp;<span  style="font-size: 10px;color:red">Available Yard Qty :'+item.stock.available_yard_quantity+'</span>')
+                .append('<a>' + item['stock']['name'] + '</a>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 10px;color:blue">Selling Price : &#x20A6; '+formatMoney(item.stock.selling_price)+'&nbsp;&nbsp;&nbsp;</span><span style="font-size: 10px;color:green">VIP Selling Price : &#x20A6;'+formatMoney(item.stock.vip_selling_price)+'</span>&nbsp;&nbsp;&nbsp;'+'<span style="font-size: 10px;color:green">VVIP Selling Price : &#x20A6;'+formatMoney(item.stock.vvip_selling_price)+'</span>&nbsp;&nbsp;&nbsp;'+'<span style="font-size: 10px;color:green">Executive Price : &#x20A6;'+formatMoney(item.stock.executive_selling_price)+'</span>'+'</span>&nbsp;&nbsp;&nbsp;<span  style="font-size: 10px;color:red">Available  Qty :'+item.stock.available_quantity+'</span>')
                 .appendTo(ul);
         };
         // end autocomplete

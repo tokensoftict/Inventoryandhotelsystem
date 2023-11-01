@@ -23,10 +23,17 @@
             placeholder: "Select Status"
         });
 
+        $(".price-settings").select2({
+            placeholder: "Select Price"
+        });
+
         $(".select-payment-method").select2({
             placeholder: "Select a Payment Method"
         });
 
+        $(".select-table").select2({
+            placeholder: "Select a Table"
+        });
         // Templating
         function formatState (state) {
             if (!state.id) { return state.text; }

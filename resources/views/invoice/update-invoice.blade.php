@@ -286,6 +286,17 @@
                                                 <label for="exampleInputEmail1">Invoice / Receipt No</label>
                                                 <input class="form-control" id="invoice_paper_number" value="{{ $invoice->invoice_paper_number }}"  placeholder="Invoice / Receipt No" type="text">
                                             </div>
+
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Select Table</label>
+                                                <select class="form-control  select-table"  name="select_table" id="select_table">
+                                                    <option>-Select Table-</option>
+                                                    @foreach($tables as $table)
+                                                        <option {{ $invoice->customer_table_id == $table->id ? 'selected' : '' }} value="{{ $table->id }}">{{ $table->department }} - {{ $table->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </section>
@@ -650,7 +661,8 @@
                     'customer_id' :$('#customer_id').val(),
                     'date':$('#invoice_date').val(),
                     'invoice_paper_number' : $('#invoice_paper_number').val(),
-                    'payment' : payment_payment
+                    'payment' : payment_payment,
+                    'customer_table_id': $('#select_table').val() == "" ? null : $('#select_table').val()
                 },
                 success: function(returnData){
                     hideMask();
